@@ -1,0 +1,8 @@
+{ 
+    "Get Payment Address":
+    {"paymentforward_id":"C5orpHQQJ9mi1y1a6n4Mr3f1WXmRTbAx","payment_address":"yMagFR3T39rLY87hztmQpPPCduwgo2JUoZ","destination_address":"yUNrMqFv4MD4dQXmjeJrmUPWuHzNvZgB8g","mining_fee_duffs":10000},
+    "Get Funding Address": {"address":"yUNrMqFv4MD4dQXmjeJrmUPWuHzNvZgB8g"},
+    "Get Balance":{"addrStr":"yUNrMqFv4MD4dQXmjeJrmUPWuHzNvZgB8g","balance":274.8277,"balanceSat":27482770000,"totalReceived":274.8277,"totalReceivedSat":27482770000,"totalSent":0,"totalSentSat":0,"unconfirmedBalance":-0.0002,"unconfirmedBalanceSat":-20000,"unconfirmedTxApperances":2,"unconfirmedAppearances":2,"txApperances":2,"txAppearances":2},
+    "Get Private Key": {"private_key":"090ed93c238170375e8867768a84c70dae3743299bfecc7929574a0030d111b7"},
+    "Pay":{"txid":"92eeecc007d0040139cc5516f671e335f6d94b910b892e5fa3d52f2b292ccad0"}
+}
