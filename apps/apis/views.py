@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 
 from .tasks import test
 from .thing_descriptors import *
+from .utils import *
 
 
 class ObjectsView(APIView):
@@ -77,6 +78,17 @@ class WalletActionsDash(APIView):
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
+        # Get authentication token
+        token = get_access_token()
+        if not token:
+            data = {
+                'error': True,
+                'message': 'Blockchain authentication failed',
+                'status': status.HTTP_400_BAD_REQUEST
+            }
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        res = dict()
+
         if aid == 'wallet_setup':
             try:
                 network_type = input_data['network_type']
@@ -125,6 +137,17 @@ class WalletActionsBitcoin(APIView):
                 'status': status.HTTP_400_BAD_REQUEST
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+        # Get authentication token
+        token = get_access_token()
+        if not token:
+            data = {
+                'error': True,
+                'message': 'Blockchain authentication failed',
+                'status': status.HTTP_400_BAD_REQUEST
+            }
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        res = dict()
 
         if aid == 'wallet_setup':
             try:
@@ -175,6 +198,17 @@ class RepositoryActions(APIView):
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
+        # Get authentication token
+        token = get_access_token()
+        if not token:
+            data = {
+                'error': True,
+                'message': 'Blockchain authentication failed',
+                'status': status.HTTP_400_BAD_REQUEST
+            }
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        res = dict()
+
         if aid == 'repository_setup':
             try:
                 repository_secret = input_data['repository_secret']
@@ -213,26 +247,70 @@ class WalletViewDash(APIView):
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
+        # Get authentication token
+        token = get_access_token()
+        if not token:
+            data = {
+                'error': True,
+                'message': 'Blockchain authentication failed',
+                'status': status.HTTP_400_BAD_REQUEST
+            }
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        res = dict()
+
         if pid == 'my_balance':
             try:
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
             # call API for wallet balance
-            data = {
-                'balance': 10057389
-            }
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
+                                                                           chaincode=wallet_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'getBalance', 'args': '["{}"]'.format(wallet_secret)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'wallet_address': res['addrStr'],
+                    'balance_dash': res['balance'],
+                    'balance_duffs': res['balanceSat'],
+                    'total_received_dash': res['totalReceived'],
+                    'total_received_duffs': res['totalReceivedSat'],
+                    'total_sent_dash': res['totalSent'],
+                    'total_sent_duffs': res['totalSentSat'],
+                    'unconfirmed_balance_dash': res['unconfirmedBalance'],
+                    'unconfirmed_balance_duffs': res['unconfirmedBalanceSat'],
+                    'unconfirmed_appearances': res['unconfirmedAppearances'],
+                    'tx_appearances': res['txAppearances']
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
         elif pid == 'my_funding_address':
             try:
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -240,69 +318,178 @@ class WalletViewDash(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             # call API for get address
-            data = {
-                'address': 'CRYPTO_ADDRESS'
-            }
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
+                                                                           chaincode=wallet_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'getFundingAddress', 'args': '["{}"]'.format(wallet_secret)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'wallet_address': res['address']
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         elif pid == 'payment_address':
             try:
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            # call API to get payment address based on the USD amount
-            data = {
-                'payment_address': 'PAYMENT_ADDRESS',
-                'amount': 108923490,
-                'event_id': 'EVENT_ID'
-            }
+            # call API to get payment address
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
+                                                                           chaincode=wallet_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'getPaymentAddress', 'args': '["{}"]'.format(wallet_secret)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'paymentforward_id': res['paymentforward_id'],
+                    'payment_address': res['payment_address'],
+                    'destination_address': res['destination_address'],
+                    'mining_fee_duffs': res['mining_fee_duffs']
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         elif pid == 'private_key':
             try:
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            data = {
-                'value': 10
-            }
+            # Call get private key
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
+                                                                           chaincode=wallet_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'getPrivateKey', 'args': '["{}"]'.format(wallet_secret)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'private_key': res['private_key']
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         elif pid == 'send_payment':
             try:
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
                 destination_address = input_data['destination_address']
-                amount_duffs = input_data['amount_satoshis']
+                amount_duffs = input_data['amount_duffs']
+                instant_send = input_data['instant_send']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            data = {
-                'value': 10
-            }
+            # Send payment
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
+                                                                           chaincode=wallet_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'pay',
+                       'args': '["{}", "{}", "{}", "{}"]'.format(wallet_secret, destination_address, amount_duffs,
+                                                                 instant_send)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'transaction_id': res['txid']
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         elif pid == 'ticker':
             try:
                 wallet_name = input_data['wallet_name']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            data = {
-                'value': 10
-            }
+            # Call get ticker
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
+                                                                           chaincode=wallet_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'ticker', 'args': '[""]'}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'pair': res['message']['pair'],
+                    'upper_unix': res['message']['upper_unix'],
+                    'lower_unix': res['message']['lower_unix'],
+                    'vwap': res['message']['vwap']
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         return Response(data, status=status.HTTP_200_OK)
 
 
@@ -326,11 +513,23 @@ class WalletViewBitcoin(APIView):
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
+        # Get authentication token
+        token = get_access_token()
+        if not token:
+            data = {
+                'error': True,
+                'message': 'Blockchain authentication failed',
+                'status': status.HTTP_400_BAD_REQUEST
+            }
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        res = dict()
+
         if pid == 'my_balance':
             try:
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -338,14 +537,44 @@ class WalletViewBitcoin(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             # call API for wallet balance
-            data = {
-                'balance': 10057389
-            }
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
+                                                                           chaincode=wallet_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'getBalance', 'args': '["{}"]'.format(wallet_secret)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'wallet_address': res['addrStr'],
+                    'balance_bitcoin': res['balance'],
+                    'balance_satoshis': res['balanceSat'],
+                    'total_received_bitcoin': res['totalReceived'],
+                    'total_received_satoshis': res['totalReceivedSat'],
+                    'total_sent_bitcoin': res['totalSent'],
+                    'total_sent_satoshis': res['totalSentSat'],
+                    'unconfirmed_balance_bitcoin': res['unconfirmedBalance'],
+                    'unconfirmed_balance_satoshis': res['unconfirmedBalanceSat'],
+                    'unconfirmed_appearances': res['unconfirmedTxApperances'],
+                    'tx_appearances': res['txApperances']
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         elif pid == 'my_funding_address':
             try:
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -353,70 +582,177 @@ class WalletViewBitcoin(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             # call API for get address
-            data = {
-                'address': 'CRYPTO_ADDRESS'
-            }
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
+                                                                           chaincode=wallet_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'getFundingAddress', 'args': '["{}"]'.format(wallet_secret)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'wallet_address': res['address']
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         elif pid == 'payment_address':
             try:
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            # call API to get payment address based on the USD amount
-            data = {
-                'payment_address': 'PAYMENT_ADDRESS',
-                'amount': 108923490,
-                'event_id': 'EVENT_ID'
-            }
+            # call API to get payment address
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
+                                                                           chaincode=wallet_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'getPaymentAddress', 'args': '["{}"]'.format(wallet_secret)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'paymentforward_id': res['paymentforward_id'],
+                    'payment_address': res['payment_address'],
+                    'destination_address': res['destination_address'],
+                    'mining_fee_satoshis': res['mining_fee_satoshis']
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         elif pid == 'private_key':
             try:
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            data = {
-                'value': 10
-            }
+            # Call get private key
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
+                                                                           chaincode=wallet_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'getPrivateKey', 'args': '["{}"]'.format(wallet_secret)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'private_key': res['private_key']
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         elif pid == 'send_payment':
             try:
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
                 destination_address = input_data['destination_address']
-                amount_duffs = input_data['amount_duffs']
-                instant_send = input_data['instant_send']
+                amount_satoshis = input_data['amount_satoshis']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            data = {
-                'value': 10
-            }
+            # Send payment
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
+                                                                           chaincode=wallet_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'pay',
+                       'args': '["{}", "{}", "{}"]'.format(wallet_secret, destination_address, amount_satoshis
+                                                                 )}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'transaction_id': res['txid']
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         elif pid == 'ticker':
             try:
                 wallet_name = input_data['wallet_name']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            data = {
-                'value': 10
-            }
+            # Call get ticker
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
+                                                                           chaincode=wallet_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'ticker', 'args': '[""]'}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'pair': res['message']['pair'],
+                    'upper_unix': res['message']['upper_unix'],
+                    'lower_unix': res['message']['lower_unix'],
+                    'vwap': res['message']['vwap']
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         return Response(data, status=status.HTTP_200_OK)
 
 
@@ -439,6 +775,17 @@ class RepositoryView(APIView):
                 'status': status.HTTP_400_BAD_REQUEST
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+        # Get authentication token
+        token = get_access_token()
+        if not token:
+            data = {
+                'error': True,
+                'message': 'Blockchain authentication failed',
+                'status': status.HTTP_400_BAD_REQUEST
+            }
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        res = dict()
 
         if pid == 'create_asset':
             try:
