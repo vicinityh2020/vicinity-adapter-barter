@@ -1,5 +1,5 @@
 import requests
-
+import json
 BITCOIN_CHANNEL = 'test'
 DASH_CHANNEL = 'test'
 REPOSITORY_CHANNEL = 'test'
@@ -17,7 +17,7 @@ def get_access_token():
     }
     headers = {'Content-Type': 'application/json'}
     try:
-        r = requests.post(url, headers=headers, params=payload)
+        r = requests.post(url, headers=headers, data=json.dumps(payload))
         data = r.json()
         if data and data['success']:
             return data['token']
