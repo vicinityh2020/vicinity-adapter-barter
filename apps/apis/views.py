@@ -7,17 +7,17 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .tasks import test
+from .tasks import instantiate_dash_wallet, instantiate_bitcoin_wallet
 from .thing_descriptors import *
 from .utils import *
 
 
 class ObjectsView(APIView):
     service_object_descriptor = {
-        'adapter-id': 'barter-test',
+        'adapter-id': ADAPTER_ID,
         'thing-descriptions': [
             {
-                'oid': 'barter-micropayment-dash',
+                'oid': BARTER_DASH_OID,
                 'name': 'VLF Barter MicroPayment Service based on DASH cryptocurrency',
                 'type': 'core:Service',
                 'version': '0.1',
@@ -28,7 +28,7 @@ class ObjectsView(APIView):
                 'actions': [ACTION_WALLET_SETUP_DASH]
             },
             {
-                'oid': 'barter-micropayment-bitcoin',
+                'oid': BARTER_BITCOIN_OID,
                 'name': 'VLF Barter MicroPayment Service based on BITCOIN cryptocurrency',
                 'type': 'core:Service',
                 'version': '0.1',
@@ -39,14 +39,15 @@ class ObjectsView(APIView):
                 'actions': [ACTION_WALLET_SETUP_BITCOIN]
             },
             {
-                'oid': 'barter-data-storage',
+                'oid': BARTER_REPOSITORY_OID,
                 'name': 'VLF Barter Service for data management on permissioned blockchain',
                 'type': 'core:Service',
                 'version': '0.1',
                 'keywords': ['data', 'repository'],
                 'properties': [CREATE_ASSET, READ_ASSET_BY_KEY, UPDATE_ASSET, INVALIDATE_ASSET,
                                READ_ASSETS_BY_KEY_RANGE, READ_ASSET_HISTORY],
-                'actions': [SETUP_REPOSITORY]
+                'actions': [SETUP_REPOSITORY],
+                'events': []
             }
         ]
     }
@@ -72,6 +73,13 @@ class WalletActionsDash(APIView):
 
         if not input_data:
             data = {
+                'error': 'Missing input parameters'
+            }
+            url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+            headers = {'infrastructure-id': BARTER_DASH_OID, 'status': 'failed',
+                       'adapter-id': ADAPTER_ID}
+            r = requests.put(url, data=json.dumps(data), headers=headers)
+            data = {
                 'error': True,
                 'message': 'Missing input parameters',
                 'status': status.HTTP_400_BAD_REQUEST
@@ -82,18 +90,32 @@ class WalletActionsDash(APIView):
         token = get_access_token()
         if not token:
             data = {
+                'error': 'Blockchain authentication failed'
+            }
+            url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+            headers = {'infrastructure-id': BARTER_DASH_OID, 'status': 'failed',
+                       'adapter-id': ADAPTER_ID}
+            r = requests.put(url, data=json.dumps(data), headers=headers)
+            data = {
                 'error': True,
                 'message': 'Blockchain authentication failed',
                 'status': status.HTTP_400_BAD_REQUEST
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
-        res = dict()
 
         if aid == 'wallet_setup':
             try:
                 network_type = input_data['network_type']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
+                print(e)
+                data = {
+                    'error': 'Invalid input parameters'
+                }
+                url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+                headers = {'infrastructure-id': BARTER_DASH_OID, 'status': 'failed',
+                           'adapter-id': ADAPTER_ID}
+                r = requests.put(url, data=json.dumps(data), headers=headers)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -102,16 +124,23 @@ class WalletActionsDash(APIView):
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             if network_type not in ['mainnet', 'testnet']:
                 data = {
+                    'error': 'Network type must be mainnet or testnet'
+                }
+                url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+                headers = {'infrastructure-id': BARTER_DASH_OID, 'status': 'failed',
+                           'adapter-id': ADAPTER_ID}
+                r = requests.put(url, data=json.dumps(data), headers=headers)
+                data = {
                     'error': True,
                     'message': 'Network type must be mainnet or testnet',
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
-            # # call celery task for wallet setup
+            # call celery task for wallet setup
+            a = instantiate_dash_wallet.delay(token, network_type, wallet_secret, oid, aid)
 
         data = {}
-
         return Response(data, status=status.HTTP_200_OK)
 
 
@@ -132,6 +161,13 @@ class WalletActionsBitcoin(APIView):
 
         if not input_data:
             data = {
+                'error': 'Missing input parameters'
+            }
+            url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+            headers = {'infrastructure-id': BARTER_DASH_OID, 'status': 'failed',
+                       'adapter-id': ADAPTER_ID}
+            r = requests.put(url, data=json.dumps(data), headers=headers)
+            data = {
                 'error': True,
                 'message': 'Missing input parameters',
                 'status': status.HTTP_400_BAD_REQUEST
@@ -142,18 +178,32 @@ class WalletActionsBitcoin(APIView):
         token = get_access_token()
         if not token:
             data = {
+                'error': 'Blockchain authentication failed'
+            }
+            url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+            headers = {'infrastructure-id': BARTER_DASH_OID, 'status': 'failed',
+                       'adapter-id': ADAPTER_ID}
+            r = requests.put(url, data=json.dumps(data), headers=headers)
+            data = {
                 'error': True,
                 'message': 'Blockchain authentication failed',
                 'status': status.HTTP_400_BAD_REQUEST
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
-        res = dict()
 
         if aid == 'wallet_setup':
             try:
                 network_type = input_data['network_type']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
+                print(e)
+                data = {
+                    'error': 'Invalid input parameters'
+                }
+                url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+                headers = {'infrastructure-id': BARTER_DASH_OID, 'status': 'failed',
+                           'adapter-id': ADAPTER_ID}
+                r = requests.put(url, data=json.dumps(data), headers=headers)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -162,16 +212,22 @@ class WalletActionsBitcoin(APIView):
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             if network_type not in ['mainnet', 'testnet']:
                 data = {
+                    'error': 'Network type must be mainnet or testnet'
+                }
+                url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+                headers = {'infrastructure-id': BARTER_DASH_OID, 'status': 'failed',
+                           'adapter-id': ADAPTER_ID}
+                r = requests.put(url, data=json.dumps(data), headers=headers)
+                data = {
                     'error': True,
                     'message': 'Network type must be mainnet or testnet',
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
-            # # call celery task for wallet setup
-
+            # call celery task for wallet setup
+            a = instantiate_bitcoin_wallet.delay(token, network_type, wallet_secret, oid, aid)
         data = {}
-
         return Response(data, status=status.HTTP_200_OK)
 
 
