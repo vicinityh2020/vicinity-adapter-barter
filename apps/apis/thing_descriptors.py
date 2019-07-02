@@ -697,8 +697,9 @@ SEND_PAYMENT_BITCOIN = {
     }
 }
 
+DASH_EID = "dash_payments"
 PAYMENT_EVENT_DASH = {
-    "eid": "dash_payments",
+    "eid": DASH_EID,
     "monitors": "adapters:MeanPowerConsumption",
     "output": {
         "type": "object",
@@ -763,8 +764,11 @@ PAYMENT_EVENT_DASH = {
         ]}
 }
 
+
+BITCOIN_EID = "bitcoin_payments"
+
 PAYMENT_EVENT_BITCOIN = {
-    "eid": "bitcoin_payments",
+    "eid": BITCOIN_EID,
     "monitors": "adapters:MeanPowerConsumption",
     "output": {
         "type": "object",

@@ -12,6 +12,8 @@ urlpatterns = [
     path('wallets/dash/<oid>/actions/<aid>', views.WalletActionsDash.as_view(), name='wallet_actions_dash_view'),
     path('wallets/bitcoin/<oid>/actions/<aid>', views.WalletActionsBitcoin.as_view(), name='wallet_actions_bitcoin_view'),
     path('repositories/<oid>/actions/<aid>', views.RepositoryActions.as_view(), name='repository_actions_view'),
+    path('wallets/dash/events', views.WalletEventsDash.as_view(), name='wallet_events_dash_view'),
+    path('wallets/bitcoin/events', views.WalletEventsBitcoin.as_view(), name='wallet_events_bitcoin_view'),
 
-    path('objects/<iid>/publishers/<oid>/events/<eid>', views.WalletEvents.as_view(), name='wallet_events_view'),
+    path('objects/<iid>/publishers/<oid>/events/<eid>', views.WalletEventsSimulation.as_view(), name='wallet_events_simulation_view'),
 ]

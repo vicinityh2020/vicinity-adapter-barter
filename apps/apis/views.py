@@ -959,7 +959,7 @@ class RepositoryView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-class WalletEvents(APIView):
+class WalletEventsSimulation(APIView):
     def get(self, request, iid, oid, eid):
         # Simulate event subscribe
         print(oid)
@@ -980,4 +980,55 @@ class WalletEvents(APIView):
         print(eid)
         print('Received data:')
         print(request.data)
+        return Response({}, status=status.HTTP_200_OK)
+
+
+class WalletEventsDash(APIView):
+
+    def post(self, request):
+        try:
+            input_event = request.data
+            data = {
+                'paymentforward_id': input_event['paymentforward_id'],
+                'payment_address': input_event['payment_address'],
+                'created_date': input_event['created_date'],
+                'received_amount_duffs': input_event['received_amount_duffs'],
+                'destination_address': input_event['destination_address'],
+                'mining_fee_duffs': input_event['mining_fee_duffs'],
+                'input_transaction_id': input_event['input_transaction_hash'],
+                'is_instant_send': input_event['input_txlock'],
+                'transaction_id': input_event['transaction_hash'],
+            }
+            url = 'http://localhost:9997/agent/events/{}'.format(DASH_EID)
+            headers = {'infrastructure-id': BARTER_DASH_OID, 'adapter-id': ADAPTER_ID}
+            r = requests.put(url, data=json.dumps(data), headers=headers)
+            print(json.dumps(data))
+        except Exception as e:
+            print(e)
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({}, status=status.HTTP_200_OK)
+
+
+class WalletEventsBitcoin(APIView):
+
+    def post(self, request):
+        try:
+            input_event = request.data
+            data = {
+                'paymentforward_id': input_event['paymentforward_id'],
+                'payment_address': input_event['payment_address'],
+                'created_date': input_event['created_date'],
+                'received_amount_satoshis': input_event['received_amount_satoshis'],
+                'destination_address': input_event['destination_address'],
+                'mining_fee_satoshis': input_event['mining_fee_satoshis'],
+                'input_transaction_id': input_event['input_transaction_hash'],
+                'transaction_id': input_event['transaction_hash'],
+            }
+            url = 'http://localhost:9997/agent/events/{}'.format(BITCOIN_EID)
+            headers = {'infrastructure-id': BARTER_BITCOIN_OID, 'adapter-id': ADAPTER_ID}
+            r = requests.put(url, data=json.dumps(data), headers=headers)
+            print(json.dumps(data))
+        except Exception as e:
+            print(e)
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
         return Response({}, status=status.HTTP_200_OK)
