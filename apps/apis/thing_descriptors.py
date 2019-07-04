@@ -1116,7 +1116,7 @@ INVALIDATE_ASSET = {
 }
 
 READ_ASSETS_BY_KEY_RANGE = {
-    "pid": "read_asset_by_key_range",
+    "pid": "read_assets_by_key_range",
     "monitors": "adapters:Start",
     "write_link": {
         "href": "/repositories/property/{pid}",
@@ -1208,7 +1208,7 @@ READ_ASSET_HISTORY = {
 }
 
 COUCHDB_QUERY_ASSETS = {
-    "pid": "couch_query_assets",
+    "pid": "couchdb_query_assets",
     "monitors": "adapters:Start",
     "write_link": {
         "href": "/repositories/property/{pid}",
