@@ -45,7 +45,7 @@ class ObjectsView(APIView):
                 'version': '0.1',
                 'keywords': ['data', 'repository'],
                 'properties': [CREATE_ASSET, READ_ASSET_BY_KEY, UPDATE_ASSET, INVALIDATE_ASSET,
-                               READ_ASSETS_BY_KEY_RANGE, READ_ASSET_HISTORY],
+                               READ_ASSETS_BY_KEY_RANGE, READ_ASSET_HISTORY, COUCHDB_QUERY_ASSETS],
                 'actions': [SETUP_REPOSITORY],
                 'events': []
             }
