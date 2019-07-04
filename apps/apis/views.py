@@ -252,6 +252,15 @@ class RepositoryActions(APIView):
                 'message': 'Missing input parameters',
                 'status': status.HTTP_400_BAD_REQUEST
             }
+            url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+            headers = {'infrastructure-id': BARTER_REPOSITORY_OID, 'status': 'failed',
+                       'adapter-id': ADAPTER_ID}
+            r = requests.put(url, data=json.dumps(data), headers=headers)
+            data = {
+                'error': True,
+                'message': 'Missing input parameters',
+                'status': status.HTTP_400_BAD_REQUEST
+            }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
         # Get authentication token
@@ -262,9 +271,16 @@ class RepositoryActions(APIView):
                 'message': 'Blockchain authentication failed',
                 'status': status.HTTP_400_BAD_REQUEST
             }
+            url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+            headers = {'infrastructure-id': BARTER_REPOSITORY_OID, 'status': 'failed',
+                       'adapter-id': ADAPTER_ID}
+            r = requests.put(url, data=json.dumps(data), headers=headers)
+            data = {
+                'error': True,
+                'message': 'Blockchain authentication failed',
+                'status': status.HTTP_400_BAD_REQUEST
+            }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
-        res = dict()
-
         if aid == 'repository_setup':
             try:
                 repository_secret = input_data['repository_secret']
@@ -275,7 +291,7 @@ class RepositoryActions(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 url = 'http://localhost:9997/agent/actions/{}'.format(aid)
-                headers = {'infrastructure-id': BARTER_DASH_OID, 'status': 'failed',
+                headers = {'infrastructure-id': BARTER_REPOSITORY_OID, 'status': 'failed',
                            'adapter-id': ADAPTER_ID}
                 r = requests.put(url, data=json.dumps(data), headers=headers)
                 data = {
@@ -284,8 +300,6 @@ class RepositoryActions(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            # # call celery task for wallet setup
-
             a = instantiate_data_storage.delay(token, repository_secret, oid, aid)
         data = {}
         return Response(data, status=status.HTTP_200_OK)
@@ -849,7 +863,7 @@ class RepositoryView(APIView):
                 'status': status.HTTP_400_BAD_REQUEST
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
-        res = dict()
+
         if pid == 'create_asset':
             try:
                 repository_name = input_data['repository_name']
@@ -872,13 +886,16 @@ class RepositoryView(APIView):
             try:
                 r = requests.post(url, headers=headers, data=payload)
                 res = r.json()
-                data = {
-                    'message': res['message']
-                }
+
                 if not res['success']:
                     message = res['message']
                     data = {
                         'error': message
+                    }
+                else:
+                    tx_id =res['message'].split(':')[1].strip()
+                    data = {
+                        'transaction_id': tx_id
                     }
             except Exception as e:
                 print(e)
@@ -956,6 +973,11 @@ class RepositoryView(APIView):
                     data = {
                         'error': message
                     }
+                else:
+                    tx_id = res['message'].split(':')[1].strip()
+                    data = {
+                        'transaction_id': tx_id
+                    }
             except Exception as e:
                 print(e)
                 message = "Unknown error"
@@ -996,6 +1018,11 @@ class RepositoryView(APIView):
                     data = {
                         'error': message
                     }
+                else:
+                    tx_id = res['message'].split(':')[1].strip()
+                    data = {
+                        'transaction_id': tx_id
+                    }
             except Exception as e:
                 print(e)
                 message = "Unknown error"
@@ -1030,7 +1057,7 @@ class RepositoryView(APIView):
                 r = requests.get(url, headers=headers, params=payload)
                 res = r.json()
                 data = {
-                    'assets': res
+                    'asset_list': res
                 }
             except Exception as e:
                 print(e)
@@ -1065,7 +1092,7 @@ class RepositoryView(APIView):
                 r = requests.get(url, headers=headers, params=payload)
                 res = r.json()
                 data = {
-                    'history': res
+                    'asset_history': res
                 }
             except Exception as e:
                 print(e)
@@ -1100,7 +1127,7 @@ class RepositoryView(APIView):
                 r = requests.get(url, headers=headers, params=payload)
                 res = r.json()
                 data = {
-                    'assets': res
+                    'asset_list': res
                 }
             except Exception as e:
                 print(e)

@@ -259,12 +259,12 @@ def instantiate_data_storage(token, secret, oid, aid):
         return
 
     # Call API to instantiate wallet chaincode
-    url = '{url}/channels/{channel}/chaincodes'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL)
+    url = '{url}/channels/{channel}/chaincodes'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL)
     payload = {
         "chaincodeName": repo_name,
         "chaincodeVersion": "v0",
         "chaincodeType": "node",
-        "args": [wallet_secret],
+        "args": [secret],
         "policy": {
             "identities": [
                 {"role":
