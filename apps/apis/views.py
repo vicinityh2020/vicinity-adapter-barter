@@ -863,7 +863,7 @@ class RepositoryView(APIView):
                 'status': status.HTTP_400_BAD_REQUEST
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
-
+        res = dict()
         if pid == 'create_asset':
             try:
                 repository_name = input_data['repository_name']
@@ -871,6 +871,7 @@ class RepositoryView(APIView):
                 asset_key = input_data['asset_key']
                 asset_value = input_data['asset_value']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -879,12 +880,14 @@ class RepositoryView(APIView):
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
-            payload = {'fcn': 'create',
-                       'args': '["{}", "{}", "{}"]'.format(repository_secret, asset_key, asset_value)}
+            payload = {
+                'fcn': 'create',
+                'args': [repository_secret, asset_key, asset_value]
+            }
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
             try:
-                r = requests.post(url, headers=headers, data=payload)
+                r = requests.post(url, headers=headers, data=json.dumps(payload))
                 res = r.json()
 
                 if not res['success']:
@@ -950,6 +953,7 @@ class RepositoryView(APIView):
                 asset_key = input_data['asset_key']
                 asset_new_value = input_data['asset_new_value']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -959,11 +963,12 @@ class RepositoryView(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
             payload = {'fcn': 'update',
-                       'args': '["{}", "{}", "{}"]'.format(repository_secret, asset_key, asset_new_value)}
+                       'args': [repository_secret, asset_key, asset_new_value]
+                       }
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
             try:
-                r = requests.post(url, headers=headers, data=payload)
+                r = requests.post(url, headers=headers, data=json.dumps(payload))
                 res = r.json()
                 data = {
                     'message': res['message']
@@ -995,6 +1000,7 @@ class RepositoryView(APIView):
                 repository_secret = input_data['repository_secret']
                 asset_key = input_data['asset_key']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -1004,7 +1010,8 @@ class RepositoryView(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
             payload = {'fcn': 'delete',
-                       'args': '["{}", "{}"]'.format(repository_secret, asset_key)}
+                       'args': [repository_secret, asset_key]
+                       }
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
             try:
