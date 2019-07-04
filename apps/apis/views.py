@@ -1118,6 +1118,7 @@ class RepositoryView(APIView):
                 repository_secret = input_data['repository_secret']
                 query = input_data['query']
             except Exception as e:
+                print(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
