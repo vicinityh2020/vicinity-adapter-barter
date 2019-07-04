@@ -1128,7 +1128,7 @@ class RepositoryView(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
             payload = {'peer': BARTER_PEER, 'fcn': 'queryAssets',
-                       'args': '["{}", {}]'.format(repository_secret, query)}
+                       'args': '["{}", "{}"]'.format(repository_secret, query)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
             try:
