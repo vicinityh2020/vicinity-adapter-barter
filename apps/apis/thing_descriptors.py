@@ -764,7 +764,6 @@ PAYMENT_EVENT_DASH = {
         ]}
 }
 
-
 BITCOIN_EID = "bitcoin_payments"
 
 PAYMENT_EVENT_BITCOIN = {
@@ -1013,9 +1012,22 @@ READ_ASSET_BY_KEY = {
             "field": [
                 {
                     "name": "asset",
-                    "predicate": "core:value",
                     "schema": {
-                        "type": "string"
+                        "type": "object",
+                        "field": [
+                            {
+                                "name": "value",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            {
+                                "name": "key",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        ]
                     }
                 }
             ]
@@ -1154,9 +1166,38 @@ READ_ASSETS_BY_KEY_RANGE = {
             "field": [
                 {
                     "name": "asset_list",
-                    "predicate": "core:value",
                     "schema": {
-                        "type": "string"
+                        "type": "array",
+                        "item": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "Record",
+                                    "schema": {
+                                        "type": "object",
+                                        "field": [{
+                                            "name": "value",
+                                            "schema": {
+                                                "type": "string"
+                                            }
+                                        },
+                                            {
+                                                "name": "key",
+                                                "schema": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "name": "Key",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        }
                     }
                 }
             ]
