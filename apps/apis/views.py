@@ -287,7 +287,7 @@ class RepositoryActions(APIView):
             # # call celery task for wallet setup
 
             a = instantiate_data_storage.delay(token, repository_secret, oid, aid)
-
+        data = {}
         return Response(data, status=status.HTTP_200_OK)
 
 
@@ -760,7 +760,7 @@ class WalletViewBitcoin(APIView):
                                                                            chaincode=wallet_name)
             payload = {'peer': BARTER_PEER, 'fcn': 'pay',
                        'args': '["{}", "{}", "{}"]'.format(wallet_secret, destination_address, amount_satoshis
-                                                                 )}
+                                                           )}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
             try:
@@ -850,7 +850,6 @@ class RepositoryView(APIView):
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
         res = dict()
-
         if pid == 'create_asset':
             try:
                 repository_name = input_data['repository_name']
@@ -864,18 +863,23 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,chaincode=repository_name)            
-            payload = {'peer': BARTER_PEER, 'fcn': 'create', 'args': '["{}", "{}", "{}"]'.format(repository_secret, asset_key, asset_value)}
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
+                                                                           chaincode=repository_name)
+            payload = {'fcn': 'create',
+                       'args': '["{}", "{}", "{}"]'.format(repository_secret, asset_key, asset_value)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
             try:
                 r = requests.post(url, headers=headers, data=payload)
                 res = r.json()
-                if res:
-                    success = res['success']
                 data = {
                     'message': res['message']
                 }
+                if not res['success']:
+                    message = res['message']
+                    data = {
+                        'error': message
+                    }
             except Exception as e:
                 print(e)
                 message = "Unknown error"
@@ -887,7 +891,6 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-
         elif pid == 'read_asset_by_key':
             try:
                 repository_name = input_data['repository_name']
@@ -900,10 +903,29 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            # call API for get address
-            data = {
-                'address': 'CRYPTO_ADDRESS'
-            }
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
+                                                                           chaincode=repository_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'read',
+                       'args': '["{}", "{}"]'.format(repository_secret, asset_key)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'asset': res
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         elif pid == 'update_asset':
             try:
                 repository_name = input_data['repository_name']
@@ -917,12 +939,34 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            # call API to get payment address based on the USD amount
-            data = {
-                'payment_address': 'PAYMENT_ADDRESS',
-                'amount': 108923490,
-                'event_id': 'EVENT_ID'
-            }
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
+                                                                           chaincode=repository_name)
+            payload = {'fcn': 'update',
+                       'args': '["{}", "{}", "{}"]'.format(repository_secret, asset_key, asset_new_value)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.post(url, headers=headers, data=payload)
+                res = r.json()
+                data = {
+                    'message': res['message']
+                }
+                if not res['success']:
+                    message = res['message']
+                    data = {
+                        'error': message
+                    }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         elif pid == 'invalidate_asset':
             try:
                 repository_name = input_data['repository_name']
@@ -935,9 +979,34 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            data = {
-                'value': 10
-            }
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
+                                                                           chaincode=repository_name)
+            payload = {'fcn': 'delete',
+                       'args': '["{}", "{}"]'.format(repository_secret, asset_key)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.post(url, headers=headers, data=payload)
+                res = r.json()
+                data = {
+                    'message': res['message']
+                }
+                if not res['success']:
+                    message = res['message']
+                    data = {
+                        'error': message
+                    }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         elif pid == 'read_assets_by_key_range':
             try:
                 repository_name = input_data['repository_name']
@@ -951,9 +1020,29 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            data = {
-                'value': 10
-            }
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
+                                                                           chaincode=repository_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'getAssetByKeyRange',
+                       'args': '["{}", "{}", "{}"]'.format(repository_secret, key_from, key_to)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'assets': res
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         elif pid == 'read_asset_history':
             try:
                 repository_name = input_data['repository_name']
@@ -966,9 +1055,29 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            data = {
-                'value': 10
-            }
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
+                                                                           chaincode=repository_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'getHistoryForAsset',
+                       'args': '["{}", "{}"]'.format(repository_secret, asset_key)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'history': res
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         elif pid == 'couchdb_query_assets':
             try:
                 repository_name = input_data['repository_name']
@@ -981,9 +1090,29 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            data = {
-                'value': 10
-            }
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
+                                                                           chaincode=repository_name)
+            payload = {'peer': BARTER_PEER, 'fcn': 'queryAssets',
+                       'args': '["{}", "{}"]'.format(repository_secret, query)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.get(url, headers=headers, params=payload)
+                res = r.json()
+                data = {
+                    'assets': res
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         return Response(data, status=status.HTTP_200_OK)
 
 
