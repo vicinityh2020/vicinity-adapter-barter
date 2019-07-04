@@ -940,11 +940,10 @@ class RepositoryView(APIView):
                         'status': status.HTTP_400_BAD_REQUEST
                     }
                     return Response(data, status=status.HTTP_400_BAD_REQUEST)
-
-                data = {
-                    'asset': res
-                }
-
+                else:
+                    data = {
+                        'asset': res
+                    }
             except Exception as e:
                 print(e)
                 message = "Unknown error"
