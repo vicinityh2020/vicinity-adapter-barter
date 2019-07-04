@@ -287,7 +287,7 @@ let Chaincode = class {
       let body = {
         destination_address: address.toString(),
         token: token,
-        callback_url: 'https://webhook.site/b5c04ecd-7723-4093-b35b-44b4eb423ce1'
+        callback_url: 'http://machine5.barter.block-chain-labs.com:8000/api/wallets/bitcoin/events/aeysafpomufreGIYTJKLgfwRFJHpmrfFpzoologijalisehfPMgs'
       }
 
       let url = ''

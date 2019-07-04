@@ -217,3 +217,102 @@ def instantiate_bitcoin_wallet(token, network_type, wallet_secret, oid, aid):
         headers = {'infrastructure-id': BARTER_BITCOIN_OID, 'status': 'failed',
                    'adapter-id': ADAPTER_ID}
         r = requests.put(url, data=json.dumps(data), headers=headers)
+
+@shared_task
+def instantiate_data_storage(token, secret, oid, aid):
+    # Call API to install wallet chaincode
+    url = '{url}/chaincodes'.format(url=BARTER_URL)
+    repo_name = random_string_digits()  # random wallet name
+    payload = {
+        "peers": REPOSITORY_PEERS,
+        "chaincodeName": repo_name,
+        "chaincodePath": "/home/chainrider-56c03/contracts/data_storage/",
+        "chaincodeType": "node",
+        "chaincodeVersion": "v0"
+    }
+    headers = {'Content-Type': 'application/json',
+               'Authorization': 'Bearer {}'.format(token)}
+    try:
+        r = requests.post(url, headers=headers, data=json.dumps(payload))
+        res = r.json()
+        if not res['success']:
+            message = res['message']
+            # send info about failed action and finish task
+            data = {
+                'error': message
+            }
+            url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+            headers = {'infrastructure-id': BARTER_REPOSITORY_OID, 'status': 'failed',
+                       'adapter-id': ADAPTER_ID}
+            r = requests.put(url, data=json.dumps(data), headers=headers)
+            return
+    except Exception as e:
+        print(e)
+        # send info about failed action and finish task
+        data = {
+            'error': 'Failed to install smart contract.'
+        }
+        url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+        headers = {'infrastructure-id': BARTER_REPOSITORY_OID, 'status': 'failed',
+                   'adapter-id': ADAPTER_ID}
+        r = requests.put(url, data=json.dumps(data), headers=headers)
+        return
+
+    # Call API to instantiate wallet chaincode
+    url = '{url}/channels/{channel}/chaincodes'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL)
+    payload = {
+        "chaincodeName": repo_name,
+        "chaincodeVersion": "v0",
+        "chaincodeType": "node",
+        "args": [wallet_secret],
+        "policy": {
+            "identities": [
+                {"role":
+                    {
+                        "name": "member",
+                        "mspId": "barterMSP"
+                    }
+                }
+            ],
+            "policy": {
+                "signed-by": 0
+            }
+        }
+    }
+    headers = {'Content-Type': 'application/json',
+               'Authorization': 'Bearer {}'.format(token)}
+    try:
+        r = requests.post(url, headers=headers, data=json.dumps(payload))
+        res = r.json()
+        if not res['success']:
+            # send info about failed action and finish task
+            message = res['message']
+            data = {
+                'error': message
+            }
+            url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+            headers = {'infrastructure-id': BARTER_REPOSITORY_OID, 'status': 'failed',
+                       'adapter-id': ADAPTER_ID}
+            r = requests.put(url, data=json.dumps(data), headers=headers)
+            return
+
+        # store wallet info in the db
+
+        # send info about action completed
+        data = {
+            'repository_name': repo_name
+        }
+        url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+        headers = {'infrastructure-id': BARTER_REPOSITORY_OID, 'status': 'finished',
+                   'adapter-id': ADAPTER_ID}
+        r = requests.put(url, data=json.dumps(data), headers=headers)
+    except Exception as e:
+        print(e)
+        # send info about failed action and finish task
+        data = {
+            'error': 'Failed to instantiate smart contract'
+        }
+        url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+        headers = {'infrastructure-id': BARTER_REPOSITORY_OID, 'status': 'failed',
+                   'adapter-id': ADAPTER_ID}
+        r = requests.put(url, data=json.dumps(data), headers=headers)

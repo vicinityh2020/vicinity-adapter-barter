@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .tasks import instantiate_dash_wallet, instantiate_bitcoin_wallet
+from .tasks import instantiate_dash_wallet, instantiate_bitcoin_wallet, instantiate_data_storage
 from .thing_descriptors import *
 from .utils import *
 
@@ -274,11 +274,19 @@ class RepositoryActions(APIView):
                     'message': 'Invalid input parameters',
                     'status': status.HTTP_400_BAD_REQUEST
                 }
+                url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+                headers = {'infrastructure-id': BARTER_DASH_OID, 'status': 'failed',
+                           'adapter-id': ADAPTER_ID}
+                r = requests.put(url, data=json.dumps(data), headers=headers)
+                data = {
+                    'error': True,
+                    'message': 'Invalid input parameters',
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-
             # # call celery task for wallet setup
 
-        data = {}
+            a = instantiate_data_storage.delay(token, repository_secret, oid, aid)
 
         return Response(data, status=status.HTTP_200_OK)
 
@@ -856,10 +864,30 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            # call API for wallet balance
-            data = {
-                'balance': 10057389
-            }
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,chaincode=repository_name)            
+            payload = {'peer': BARTER_PEER, 'fcn': 'create', 'args': '["{}", "{}", "{}"]'.format(repository_secret, asset_key, asset_value)}
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': 'Bearer {}'.format(token)}
+            try:
+                r = requests.post(url, headers=headers, data=payload)
+                res = r.json()
+                if res:
+                    success = res['success']
+                data = {
+                    'message': res['message']
+                }
+            except Exception as e:
+                print(e)
+                message = "Unknown error"
+                if res:
+                    message = res['message'] if 'message' in res else 'Unknown error'
+                data = {
+                    'error': True,
+                    'message': message,
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
         elif pid == 'read_asset_by_key':
             try:
                 repository_name = input_data['repository_name']

@@ -4,6 +4,8 @@ const util = require('util');
 var log4js = require('log4js');
 var logger = log4js.getLogger('ChaincodeLogger');
 
+let secret = ''
+
 let Chaincode = class {
 
   // ===============================================
@@ -14,9 +16,10 @@ let Chaincode = class {
     let ret = stub.getFunctionAndParameters();
     let args = ret.params;
     if (args.length != 1) {
-      return shim.error('Incorrect number of arguments. Expecting 1');
+      return shim.error('Incorrect number of arguments. Expecting 1.');
     }
-    logger.level = args[0];
+    logger.level = 'info'
+    secret = args[0]
     logger.info('=========== Instantiated Chaincode ===========');
     return shim.success();
   }
@@ -51,12 +54,16 @@ let Chaincode = class {
   // create - writes an asset to the ledger, where asset is represented as: (key, value)
   // ===============================================
   async create(stub, args, thisClass) {
-    if (args.length != 2) { 
-			throw new Error('Incorrect number of arguments. Expecting 2.');
-		}
+    if (args.length != 3) { 
+			throw new Error('Incorrect number of arguments. Expecting 3.');
+    }
+    
+    if (secret !== args[0]){
+      throw new Error('Invalid secret.');
+    }
 
-    let key = args[0]; 
-    let value = args[1];
+    let key = args[1]; 
+    let value = args[2];
 
     let assetState = await stub.getState(key);
     if (assetState.toString()) {
@@ -81,11 +88,15 @@ let Chaincode = class {
   // read - reads an asset from state by key
   // ===============================================
   async read(stub, args, thisClass) {
-    if (args.length != 1) {
-      throw new Error('Incorrect number of arguments. Expecting key of the asset to query');
+    if (args.length != 2) {
+      throw new Error('Incorrect number of arguments. Expecting 2.');
     }
 
-    let key = args[0];
+    if (secret !== args[0]){
+      throw new Error('Invalid secret.');
+    }
+
+    let key = args[1];
     if (!key) {
       throw new Error(' Asset key must not be empty');
     }
@@ -110,10 +121,14 @@ let Chaincode = class {
   // ==================================================
   async delete(stub, args, thisClass) {
 
-    if (args.length != 1) {
-      throw new Error('Incorrect number of arguments. Expecting name of the asset to delete');
+    if (args.length != 2) {
+      throw new Error('Incorrect number of arguments. Expecting 2.');
     }
-    let keyName = args[0];
+    if (secret !== args[0]){
+      throw new Error('Invalid secret.');
+    }
+
+    let keyName = args[1];
     if (!keyName) {
       throw new Error('key name must not be empty');
     }
@@ -139,11 +154,15 @@ let Chaincode = class {
   // update - updates the asset value for a given asset key
   // ===========================================================
   async update(stub, args, thisClass) {
-		if (args.length < 2) {
-			throw new Error('Incorrect number of arguments. Expecting key and new value.')
-		}
-		let key = args[0];
-		let newValue = args[1];
+		if (args.length != 3) {
+			throw new Error('Incorrect number of arguments. Expecting 3.')
+    }
+    if (secret !== args[0]){
+      throw new Error('Invalid secret.');
+    }
+
+		let key = args[1];
+		let newValue = args[2];
 		logger.info('- Start updating asset - ');
 		let assetAsBytes = await stub.getState(key);
 		if (!assetAsBytes || !assetAsBytes.toString()) {
@@ -164,16 +183,21 @@ let Chaincode = class {
     logger.info(asset);
     }
 
-        // ===========================================================================================
+    // ===========================================================================================
     // Read Assets By Key Range - performs a range query based on the start and end keys provided.
     // ===========================================================================================
     async getAssetByKeyRange(stub, args, thisClass) {
-      if (args.length < 2) {
-          throw new Error('Incorrect number of arguments. Expecting 2')
+      if (args.length != 3) {
+          throw new Error('Incorrect number of arguments. Expecting 3.')
       }
 
-      let startKey = args[0]
-      let endKey = args[1]
+      if (secret !== args[0]){
+        throw new Error('Invalid secret.');
+      }
+  
+
+      let startKey = args[1]
+      let endKey = args[2]
 
       let resultsIterator = await stub.getStateByRange(startKey, endKey)
       let method = thisClass['getAllResults']
@@ -186,10 +210,15 @@ let Chaincode = class {
   // getHistoryForAsset - gets all previous transactions for asset
   // ===============================================
   async getHistoryForAsset(stub, args, thisClass) {
-      if (args.length < 1) {
-      throw new Error('Incorrect number of arguments. Expecting 1')
+      if (args.length != 2) {
+      throw new Error('Incorrect number of arguments. Expecting 2.')
       }
-      let key = args[0]
+
+      if (secret !== args[0]){
+        throw new Error('Invalid secret.');
+      }
+ 
+      let key = args[1]
       console.info('- start getHistoryForAsset: %s', key)
   
       let resultsIterator = await stub.getHistoryForKey(key)
@@ -203,10 +232,15 @@ let Chaincode = class {
   //  Ad hoc rich query
   // ===============================================
   async queryAssets(stub, args, thisClass) {
-      if (args.length < 1) {
-          throw new Error('Incorrect number of arguments. Expecting queryString')
+      if (args.length != 2) {
+          throw new Error('Incorrect number of arguments. Expecting 2.')
       }
-      let queryString = args[0]
+
+      if (secret !== args[0]){
+        throw new Error('Invalid secret.');
+      }
+
+      let queryString = args[1]
       if (!queryString) {
           throw new Error('queryString must not be empty')
       }
