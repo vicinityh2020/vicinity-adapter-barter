@@ -1015,7 +1015,7 @@ class RepositoryView(APIView):
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
             try:
-                r = requests.post(url, headers=headers, data=payload)
+                r = requests.post(url, headers=headers, data=json.dumps(payload))
                 res = r.json()
                 data = {
                     'message': res['message']
