@@ -1122,7 +1122,7 @@ class WalletEventsSimulation(APIView):
         print(oid)
         print(eid)
         url = 'http://localhost:9997/agent/objects/{oid}/events/{eid}'.format(oid=oid, eid=eid)
-        headers = {'infrastructure-id': 'barter-test-service',
+        headers = {'infrastructure-id': 'barter-data-storage',
                    'adapter-id': 'barter-test'}
         r = requests.post(url, headers=headers)
         data = {
