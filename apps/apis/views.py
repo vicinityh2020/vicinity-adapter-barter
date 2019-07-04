@@ -932,8 +932,7 @@ class RepositoryView(APIView):
             try:
                 r = requests.get(url, headers=headers, params=payload)
                 res = r.json()
-
-                if res['message'] and 'error' in res['message'].lower():
+                if 'message' in res:
                     data = {
                         'error': True,
                         'message': res['message'],
@@ -1072,9 +1071,18 @@ class RepositoryView(APIView):
             try:
                 r = requests.get(url, headers=headers, params=payload)
                 res = r.json()
-                data = {
-                    'asset_list': res
-                }
+
+                if 'message' in res:
+                    data = {
+                        'error': True,
+                        'message': res['message'],
+                        'status': status.HTTP_400_BAD_REQUEST
+                    }
+                    return Response(data, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    data = {
+                        'asset_list': res
+                    }
             except Exception as e:
                 print(e)
                 message = "Unknown error"
