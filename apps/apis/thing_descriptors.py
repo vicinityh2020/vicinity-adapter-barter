@@ -38,77 +38,66 @@ MY_BALANCE_DASH = {
             "field": [
                 {
                     "name": "wallet_address",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
                     "name": "balance_dash",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "double"
                     }
                 },
                 {
                     "name": "balance_duffs",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
                 },
                 {
                     "name": "total_received_dash",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "double"
                     }
                 },
                 {
                     "name": "total_received_duffs",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
                 },
                 {
                     "name": "total_sent_dash",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "double"
                     }
                 },
                 {
                     "name": "total_sent_duffs",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
                 },
                 {
                     "name": "unconfirmed_balance_dash",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "double"
                     }
                 },
                 {
                     "name": "unconfirmed_balance_duffs",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
                 },
                 {
                     "name": "unconfirmed_appearances",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
                 },
                 {
                     "name": "tx_appearances",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
@@ -145,77 +134,66 @@ MY_BALANCE_BITCOIN = {
             "field": [
                 {
                     "name": "wallet_address",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
                     "name": "balance_bitcoin",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "double"
                     }
                 },
                 {
                     "name": "balance_satoshis",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
                 },
                 {
                     "name": "total_received_bitcoin",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "double"
                     }
                 },
                 {
                     "name": "total_received_satoshis",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
                 },
                 {
                     "name": "total_sent_bitcoin",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "double"
                     }
                 },
                 {
                     "name": "total_sent_satoshis",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
                 },
                 {
                     "name": "unconfirmed_balance_bitcoin",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "double"
                     }
                 },
                 {
                     "name": "unconfirmed_balance_satoshis",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
                 },
                 {
                     "name": "unconfirmed_appearances",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
                 },
                 {
                     "name": "tx_appearances",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
@@ -252,7 +230,6 @@ MY_FUNDING_ADDRESS_DASH = {
             "field": [
                 {
                     "name": "wallet_address",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
@@ -289,7 +266,6 @@ MY_FUNDING_ADDRESS_BITCOIN = {
             "field": [
                 {
                     "name": "wallet_address",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
@@ -326,28 +302,24 @@ PAYMENT_ADDRESS_DASH = {
             "field": [
                 {
                     "name": "paymentforward_id",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
                     "name": "payment_address",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
                     "name": "destination_address",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
                     "name": "mining_fee_duffs",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
@@ -384,28 +356,24 @@ PAYMENT_ADDRESS_BITCOIN = {
             "field": [
                 {
                     "name": "paymentforward_id",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
                     "name": "payment_address",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
                     "name": "destination_address",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
                     "name": "mining_fee_satoshis",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
@@ -436,28 +404,24 @@ TICKER_DASH = {
             "field": [
                 {
                     "name": "pair",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
                     "name": "upper_unix",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
                 },
                 {
                     "name": "lower_unix",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
                 },
                 {
                     "name": "vwap",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
@@ -488,28 +452,24 @@ TICKER_BITCOIN = {
             "field": [
                 {
                     "name": "pair",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
                 },
                 {
                     "name": "upper_unix",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
                 },
                 {
                     "name": "lower_unix",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "integer"
                     }
                 },
                 {
                     "name": "vwap",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
@@ -546,7 +506,6 @@ PRIVATE_KEY_DASH = {
             "field": [
                 {
                     "name": "private_key",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
@@ -583,7 +542,6 @@ PRIVATE_KEY_BITCOIN = {
             "field": [
                 {
                     "name": "private_key",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
@@ -638,7 +596,6 @@ SEND_PAYMENT_DASH = {
             "field": [
                 {
                     "name": "transaction_id",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
@@ -687,7 +644,6 @@ SEND_PAYMENT_BITCOIN = {
             "field": [
                 {
                     "name": "transaction_id",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
@@ -739,22 +695,19 @@ PAYMENT_EVENT_DASH = {
                 "schema": {
                     "type": "integer"
                 }
-            }
-            ,
+            },
             {
                 "name": "input_transaction_id",
                 "schema": {
                     "type": "string"
                 }
-            }
-            ,
+            },
             {
                 "name": "is_instant_send",
                 "schema": {
                     "type": "boolean"
                 }
-            }
-            ,
+            },
             {
                 "name": "transaction_id",
                 "schema": {
@@ -850,7 +803,6 @@ ACTION_WALLET_SETUP_DASH = {
             "field": [
                 {
                     "name": "wallet_name",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
@@ -888,7 +840,6 @@ ACTION_WALLET_SETUP_BITCOIN = {
             "field": [
                 {
                     "name": "wallet_name",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
@@ -919,7 +870,6 @@ SETUP_REPOSITORY = {
             "field": [
                 {
                     "name": "repository_name",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
@@ -969,7 +919,6 @@ CREATE_ASSET = {
             "field": [
                 {
                     "name": "transaction_id",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
@@ -1074,7 +1023,6 @@ UPDATE_ASSET = {
             "field": [
                 {
                     "name": "transaction_id",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
@@ -1117,7 +1065,6 @@ INVALIDATE_ASSET = {
             "field": [
                 {
                     "name": "transaction_id",
-                    "predicate": "core:value",
                     "schema": {
                         "type": "string"
                     }
@@ -1238,9 +1185,85 @@ READ_ASSET_HISTORY = {
             "field": [
                 {
                     "name": "asset_history",
-                    "predicate": "core:value",
                     "schema": {
-                        "type": "string"
+                        "type": "array",
+                        "item": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "TxId",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                },
+                                {
+                                    "name": "IsDelete",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                },
+                                {
+                                    "name": "Value",
+                                    "schema": {
+                                        "type": "object",
+                                        "field": [{
+                                            "name": "value",
+                                            "schema": {
+                                                "type": "string"
+                                            }
+                                        },
+                                            {
+                                                "name": "key",
+                                                "schema": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "name": "Timestamp",
+                                    "schema": {
+                                        "type": "object",
+                                        "field": [
+                                            {
+                                                "name": "seconds",
+                                                "schema": {
+                                                    "type": "object",
+                                                    "field": [
+                                                        {
+                                                            "name": "high",
+                                                            "schema": {
+                                                                "type": "integer"
+                                                            }
+                                                        },
+                                                        {
+                                                            "name": "low",
+                                                            "schema": {
+                                                                "type": "integer"
+                                                            }
+                                                        },
+                                                        {
+                                                            "name": "unsigned",
+                                                            "schema": {
+                                                                "type": "boolean"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "name": "nanos",
+                                                "schema": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+
+                            ]
+                        }
                     }
                 }
             ]
@@ -1281,9 +1304,38 @@ COUCHDB_QUERY_ASSETS = {
             "field": [
                 {
                     "name": "asset_list",
-                    "predicate": "core:value",
                     "schema": {
-                        "type": "string"
+                        "type": "array",
+                        "item": {
+                            "type": "object",
+                            "field": [
+                                {
+                                    "name": "Record",
+                                    "schema": {
+                                        "type": "object",
+                                        "field": [{
+                                            "name": "value",
+                                            "schema": {
+                                                "type": "string"
+                                            }
+                                        },
+                                            {
+                                                "name": "key",
+                                                "schema": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "name": "Key",
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        }
                     }
                 }
             ]
