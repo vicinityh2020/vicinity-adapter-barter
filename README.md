@@ -62,5 +62,4 @@ Repository service exposes the following:
 
 # Adapter usage
 
-TODO -> Write how to call APIs from barter adapter. Link to test POSTMAN collection. 
-
+A Vicinity user/device/service that wants to use services from the exposed BARTER adapter will communicate it's requests via the local agent to the remote agent (through the Vicinity ecosystem) running the BARTER adapter. APIs for using the BARTER adapter are documented in the provided [POSTMAN collection](https://drive.google.com/drive/folders/1m3syArnwDn0RYZ5FDFjLAi0XxL87loP7?usp=sharing). 
