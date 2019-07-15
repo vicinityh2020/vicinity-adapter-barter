@@ -41,7 +41,7 @@ Bitcoin micropayment service exposes the following:
   * payment_address - get payment address for new transaction. Funds received on the payment address are forwarded to your wallet. Payment address is displayed to entity paying for a service. 
   * private_key - get private key for backup
   * send_payment - send funds from your wallet to specified address in case you need to perform automatic payments to an entity
-  * ticker - get info on the current value of BITCOIN n USD. Useful for calculating the amount of BITCOIN you need to receive for your service.
+  * ticker - get info on the current value of BITCOIN in USD. Useful for calculating the amount of BITCOIN you need to receive for your service.
 * Events
   * dash_payments - you should subscribe to this event to receive notifications each time someone sends you funds to unique payment address.
 
@@ -58,9 +58,9 @@ Repository service exposes the following:
   * invalidate_asset - sets the asset’s state to deleted. While the assets on the blockchain cannot be deleted, their state can be removed from the “world state”. The asset is still on the ledger.
   * read_assets_by_key_range - when keys are supplied with a natural ordering (1..5, a...z, key1...key5, etc.), the function returns a list of assets whose keys are in the range that is supplied. 
   * read_asset_history - returns the entire transaction history tied to a particular blockchain asset (does not include queries).
-couchdb_query_assets - allows to run complex couchDB queries. Returns a list of assets that satisfy the query supplied. 
+  * couchdb_query_assets - allows to run complex couchDB queries. Returns a list of assets that satisfy the query supplied. 
 
 # Adapter usage
 
-Write how to call APIs from barter adapter. Link to test POSTMAN collection. 
+TODO -> Write how to call APIs from barter adapter. Link to test POSTMAN collection. 
 
