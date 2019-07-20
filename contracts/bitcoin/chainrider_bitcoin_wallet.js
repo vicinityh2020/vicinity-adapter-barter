@@ -24,7 +24,7 @@ let Chaincode = class {
   async Init(stub) {
     let ret = stub.getFunctionAndParameters();
     let args = ret.params;
-    if (args.length != 3) {
+    if (args.length != 2) {
       return shim.error('Incorrect number of arguments. Expecting 2.');
     }
 
@@ -32,13 +32,13 @@ let Chaincode = class {
     token = 'o2IEP1p50pe1jfDtz8osOc7RpWZkwbfp'
     blockchain = args[0]
     secret = args[1]
-    private_key = args[2]
+    // private_key = NaN
 
     logger.info('blockchain %s', blockchain)
 
     //generating new private key
-    if (private_key == 'None')
-      privateKey = new bitcore.PrivateKey('b221d9dbb083a7f33428d7c2a3c3199dec34a24d70210e28716ccaa7cd4ddb79');
+    // if (private_key == 'None')
+    privateKey = new bitcore.PrivateKey('b221d9dbb083a7f33428d7c2a3c3199dec34a24d70210e28716ccaa7cd4ddb79');
 
     if ( !(blockchain == 'main' || blockchain == 'testnet') ){
       return shim.error('Unsupported blockchain network');
