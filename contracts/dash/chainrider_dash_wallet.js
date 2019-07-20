@@ -13,8 +13,8 @@ let address = ''
 let network = ''
 let secret = ''
 // Addresses
-let ip_address_main = '35.192.213.163:3001'
-let ip_address_testnet = '35.188.20.31:3001'
+let ip_address_main = 'https://api-dot-chainrider.io/v1/dash/main'
+let ip_address_testnet = 'https://api-dot-chainrider.io/v1/dash/testnet'
 let base_url_ticker = 'https://api-dot-vizlorepaymentprocessor.appspot.com/v1/finance'
 let base_url = ''
 
@@ -41,9 +41,9 @@ let Chaincode = class {
       return shim.error('Unsupported blockchain network');
     }
     if (blockchain == 'main')
-      base_url = `http://${ip_address_main}/insight-api`
+      base_url = ip_address_main
     else
-      base_url = `http://${ip_address_testnet}/insight-api`
+      base_url = ip_address_testnet
 
     network = dashcore.Networks.livenet
     address = privateKey.toAddress(network);

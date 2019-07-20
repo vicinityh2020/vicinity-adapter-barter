@@ -13,8 +13,8 @@ let address = ''
 let network = ''
 let secret = ''
 // Addresses
-let ip_address_main = '35.202.249.34:3001'
-let ip_address_testnet = '35.232.198.171:3001'
+let ip_address_main = 'https://api.chainrider.io/v1/bitcoin/main'
+let ip_address_testnet = 'https://api.chainrider.io/v1/bitcoin/testnet'
 let base_url_ticker = 'https://api-dot-vizlorepaymentprocessor.appspot.com/v1/finance'
 let base_url = ''
 
@@ -24,7 +24,7 @@ let Chaincode = class {
   async Init(stub) {
     let ret = stub.getFunctionAndParameters();
     let args = ret.params;
-    if (args.length != 2) {
+    if (args.length != 3) {
       return shim.error('Incorrect number of arguments. Expecting 2.');
     }
 
@@ -32,19 +32,21 @@ let Chaincode = class {
     token = 'o2IEP1p50pe1jfDtz8osOc7RpWZkwbfp'
     blockchain = args[0]
     secret = args[1]
+    private_key = args[2]
 
     logger.info('blockchain %s', blockchain)
 
     //generating new private key
-    privateKey = new bitcore.PrivateKey('b221d9dbb083a7f33428d7c2a3c3199dec34a24d70210e28716ccaa7cd4ddb79');
+    if (private_key == 'None')
+      privateKey = new bitcore.PrivateKey('b221d9dbb083a7f33428d7c2a3c3199dec34a24d70210e28716ccaa7cd4ddb79');
 
     if ( !(blockchain == 'main' || blockchain == 'testnet') ){
       return shim.error('Unsupported blockchain network');
     }
     if (blockchain == 'main')
-      base_url = `http://${ip_address_main}/insight-api`
+      base_url = ip_address_main
     else
-      base_url = `http://${ip_address_testnet}/insight-api`
+      base_url = ip_address_testnet
 
     network = bitcore.Networks.livenet
     address = privateKey.toAddress(network);
