@@ -2,9 +2,26 @@
 
 BARTER is a blockchain framework built on top of open source projects Hyperledger Fabric, Dash and Bitcoin and proprietary VizLore’s [ChainRider service](https://chainrider.io/). It is a micro-payment enabler service that can be exploited to support a range of use-cases that need a secure and scalable M2M micro-payment solution specifically designed for IoT ecosystem. Hyperledger Fabric is an open source enterprise-grade permissioned distributed ledger technology (DLT) platform. ChainRider offers an ecosystem of tools and services built around public and private blockchain which helps in prototyping and building proprietary applications on different blockchains. BARTER integrates all of the aforementioned solutions to provide a private blockchain infrastructure for blockchain-assisted micro-payments, private data storage and smart contracts management. BARTER is a decentralized private blockchain infrastructure with deployed smart contracts for automated micro-payments and data storage, allowing autonomous interaction between IoT ecosystem entities in carrying out everyday business workflows. Regulations, ethics, and business rules can be incorporated through smart contracts, which are stored on BARTER’s Hyperledger blockchain and provide REST API interface for integration with IoT devices in a secure manner. This increases the security of M2M transactions and enforces contract performance. 
 
+![BARTER Architecture](BARTER_architecture.png)
+
+The figure above provides detailed BARTER framework architecture.
+
 # Installation and configuration
 
 BARTER adapter is not meant to be installed by individual users. Instead, VizLore operates the BARTER blockchain infrastructure and exposes the BARTER adapter to the Vicinity ecosystem. 
+
+In order to run BARTER adapter, in addition to starting VICINITY gateway API and configured VICINITY agent following requirements need to be fulfilled:
+1. Installing python 3.6
+2. Installing and setting up the Postgres database. The info about the name of the database, user, and password could be found in the .env.example file (DATABASE_URL environment variable)
+3. Installing requirements by running following command from the root folder of the adapter:
+`pip install -r requirements.txt`
+4. Managing migrations (run commands from the root folder of the adapter)
+`python manage.py makemigrations` `python mamange.py migrate` 
+5. Starting the BARTER adapter by running following command from the root folder of the BARTER adapter (it starts the Python Django web application)
+`python manage.py runserver 0.0.0.0:8000`
+6. Installing redis server.
+6. Starting the Celery application which handles actions/tasks within the BARTER framework by running the following command from the root folder of the BARTER adapter
+`celery worker -A config --loglevel=info`
 
 # Adapter description
 
