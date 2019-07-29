@@ -60,7 +60,7 @@ Bitcoin micropayment service exposes the following:
   * send_payment - send funds from your wallet to specified address in case you need to perform automatic payments to an entity
   * ticker - get info on the current value of BITCOIN in USD. Useful for calculating the amount of BITCOIN you need to receive for your service.
 * Events
-  * dash_payments - you should subscribe to this event to receive notifications each time someone sends you funds to unique payment address.
+  * bitcoin_payments - you should subscribe to this event to receive notifications each time someone sends you funds to unique payment address.
 
 ### Repository service
 
