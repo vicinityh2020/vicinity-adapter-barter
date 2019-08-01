@@ -12,8 +12,6 @@ REPOSITORY_CHANNEL = 'datasharing'
 
 BARTER_URL = 'http://machine1.barter.block-chain-labs.com:4000'
 
-BARTER_PEER = 'peer0.machine1.barter.block-chain-labs.com'
-
 DASH_PEERS = [
             "peer0.machine1.barter.block-chain-labs.com",
             "peer1.machine1.barter.block-chain-labs.com",
