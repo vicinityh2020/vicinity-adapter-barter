@@ -336,10 +336,10 @@ let Chaincode = class {
 
       let url = ''
       if (blockchain == 'main'){
-        url = `http://${ip_address_main}/paymentforward`
+        url = `${ip_address_main}/paymentforward`
       }
       else{
-        url = `http://${ip_address_testnet}/paymentforward`
+        url = `${ip_address_testnet}/paymentforward`
       }
 
       let headers = {
