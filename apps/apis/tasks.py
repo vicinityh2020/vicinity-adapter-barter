@@ -61,6 +61,7 @@ def instantiate_dash_wallet(token, network_type, wallet_secret, oid, aid):
     # Call API to instantiate wallet chaincode
     url = '{url}/channels/{channel}/chaincodes'.format(url=BARTER_URL, channel=DASH_CHANNEL)
     payload = {
+        "peers": [random.choice(DASH_PEERS)],
         "chaincodeName": wallet_name,
         "chaincodeVersion": "v0",
         "chaincodeType": "node",
@@ -162,6 +163,7 @@ def instantiate_bitcoin_wallet(token, network_type, wallet_secret, oid, aid):
     # Call API to instantiate wallet chaincode
     url = '{url}/channels/{channel}/chaincodes'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL)
     payload = {
+        "peers": [random.choice(DASH_PEERS)],
         "chaincodeName": wallet_name,
         "chaincodeVersion": "v0",
         "chaincodeType": "node",
@@ -261,6 +263,7 @@ def instantiate_data_storage(token, secret, oid, aid):
     # Call API to instantiate wallet chaincode
     url = '{url}/channels/{channel}/chaincodes'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL)
     payload = {
+        "peers": [random.choice(REPOSITORY_PEERS)],
         "chaincodeName": repo_name,
         "chaincodeVersion": "v0",
         "chaincodeType": "node",
