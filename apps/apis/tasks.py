@@ -75,7 +75,7 @@ def instantiate_dash_wallet(token, network_type, wallet_secret, oid, aid):
                 }
             ],
             "policy": {
-                "signed-by": 0
+                "1-of":[ {"signed-by": 0} ]
             }
         }
     }
@@ -175,8 +175,8 @@ def instantiate_bitcoin_wallet(token, network_type, wallet_secret, oid, aid):
                     }
                 }
             ],
-            "policy": {
-                "signed-by": 0
+           "policy": {
+                "1-of":[ {"signed-by": 0} ]
             }
         }
     }
@@ -274,8 +274,8 @@ def instantiate_data_storage(token, secret, oid, aid):
                     }
                 }
             ],
-            "policy": {
-                "signed-by": 0
+           "policy": {
+                "1-of":[ {"signed-by": 0} ]
             }
         }
     }
