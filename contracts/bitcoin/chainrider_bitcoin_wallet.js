@@ -35,7 +35,7 @@ let Chaincode = class {
     token = args[2]
     private_key_string = args[3]
     
-    logger.debug(`Instantiated with: ${blockchain}, ${secret}, ${token}, ${private_key_string}`)
+    logger.info(`Instantiated with: ${blockchain}, ${secret}, ${token}, ${private_key_string}`)
 
     //generating new private key
     if (private_key_string === 'NaN')
@@ -43,7 +43,7 @@ let Chaincode = class {
     else
         privateKey = new bitcore.PrivateKey(private_key_string);
 
-    logger.debug(`Final private key: ${privateKey}`)
+    logger.info(`Final private key: ${privateKey}`)
 
     if ( !(blockchain == 'main' || blockchain == 'testnet') ){
       return shim.error('Unsupported blockchain network');

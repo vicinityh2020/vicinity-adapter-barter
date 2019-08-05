@@ -142,7 +142,7 @@ class WalletActionsDash(APIView):
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
             # call celery task for wallet setup
-            a = instantiate_dash_wallet.delay(token, network_type, wallet_secret, chainrider_token, 'NaN', oid, aid)
+            a = instantiate_dash_wallet.delay(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid)
         elif aid == 'wallet_recover':
             try:
                 network_type = input_data['network_type']
@@ -268,7 +268,7 @@ class WalletActionsBitcoin(APIView):
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
             # call celery task for wallet setup
-            a = instantiate_bitcoin_wallet.delay(token, network_type, wallet_secret, chainrider_token, 'NaN', oid, aid)
+            a = instantiate_bitcoin_wallet.delay(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid)
         elif aid == 'wallet_recover':
             try:
                 network_type = input_data['network_type']
