@@ -111,7 +111,7 @@ class WalletActionsDash(APIView):
                 network_type = input_data['network_type']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': 'Invalid input parameters'
                 }
@@ -199,7 +199,7 @@ class WalletActionsBitcoin(APIView):
                 network_type = input_data['network_type']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': 'Invalid input parameters'
                 }
@@ -344,7 +344,7 @@ class WalletViewDash(APIView):
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -377,7 +377,7 @@ class WalletViewDash(APIView):
                     'tx_appearances': res['txAppearances']
                 }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -393,7 +393,7 @@ class WalletViewDash(APIView):
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -415,7 +415,7 @@ class WalletViewDash(APIView):
                     'wallet_address': res['address']
                 }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -430,7 +430,7 @@ class WalletViewDash(APIView):
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -455,7 +455,7 @@ class WalletViewDash(APIView):
                     'mining_fee_duffs': res['mining_fee_duffs']
                 }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -470,7 +470,7 @@ class WalletViewDash(APIView):
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -492,7 +492,7 @@ class WalletViewDash(APIView):
                     'private_key': res['private_key']
                 }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -510,7 +510,7 @@ class WalletViewDash(APIView):
                 amount_duffs = input_data['amount_duffs']
                 instant_send = input_data['instant_send']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -535,7 +535,7 @@ class WalletViewDash(APIView):
                     'transaction_id': res['txid']
                 }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -549,7 +549,7 @@ class WalletViewDash(APIView):
             try:
                 wallet_name = input_data['wallet_name']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -575,7 +575,7 @@ class WalletViewDash(APIView):
                     'vwap': res['message']['vwap']
                 }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -624,7 +624,7 @@ class WalletViewBitcoin(APIView):
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -656,7 +656,7 @@ class WalletViewBitcoin(APIView):
                     'tx_appearances': res['txApperances']
                 }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -671,7 +671,7 @@ class WalletViewBitcoin(APIView):
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -693,7 +693,7 @@ class WalletViewBitcoin(APIView):
                     'wallet_address': res['address']
                 }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -708,7 +708,7 @@ class WalletViewBitcoin(APIView):
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -733,7 +733,7 @@ class WalletViewBitcoin(APIView):
                     'mining_fee_satoshis': res['mining_fee_satoshis']
                 }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -748,7 +748,7 @@ class WalletViewBitcoin(APIView):
                 wallet_name = input_data['wallet_name']
                 wallet_secret = input_data['wallet_secret']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -770,7 +770,7 @@ class WalletViewBitcoin(APIView):
                     'private_key': res['private_key']
                 }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -787,7 +787,7 @@ class WalletViewBitcoin(APIView):
                 destination_address = input_data['destination_address']
                 amount_satoshis = input_data['amount_satoshis']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -811,7 +811,7 @@ class WalletViewBitcoin(APIView):
                     'transaction_id': res['txid']
                 }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -825,7 +825,7 @@ class WalletViewBitcoin(APIView):
             try:
                 wallet_name = input_data['wallet_name']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -850,7 +850,7 @@ class WalletViewBitcoin(APIView):
                     'vwap': res['message']['vwap']
                 }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -900,7 +900,7 @@ class RepositoryView(APIView):
                 asset_key = input_data['asset_key']
                 asset_value = input_data['asset_value']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -930,7 +930,7 @@ class RepositoryView(APIView):
                         'transaction_id': tx_id
                     }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -975,7 +975,7 @@ class RepositoryView(APIView):
                         'asset': res
                     }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -992,7 +992,7 @@ class RepositoryView(APIView):
                 asset_key = input_data['asset_key']
                 asset_new_value = input_data['asset_new_value']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -1023,7 +1023,7 @@ class RepositoryView(APIView):
                         'transaction_id': tx_id
                     }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -1039,7 +1039,7 @@ class RepositoryView(APIView):
                 repository_secret = input_data['repository_secret']
                 asset_key = input_data['asset_key']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -1070,7 +1070,7 @@ class RepositoryView(APIView):
                         'transaction_id': tx_id
                     }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -1117,7 +1117,7 @@ class RepositoryView(APIView):
                         'asset_list': res
                     }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -1154,7 +1154,7 @@ class RepositoryView(APIView):
                     'asset_history': res
                 }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -1170,7 +1170,7 @@ class RepositoryView(APIView):
                 repository_secret = input_data['repository_secret']
                 query = input_data['query']
             except Exception as e:
-                print(e)
+                logger.error(e)
                 data = {
                     'error': True,
                     'message': 'Invalid input parameters',
@@ -1183,7 +1183,7 @@ class RepositoryView(APIView):
             logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'queryAssets',
                        'args': '["{}", "{}"]'.format(repository_secret, query.replace('"', '\\"'))}
-            print(payload)
+            logger.error(payload)
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
             try:
@@ -1193,7 +1193,7 @@ class RepositoryView(APIView):
                     'asset_list': res
                 }
             except Exception as e:
-                print(e)
+                logger.error(e)
                 message = "Unknown error"
                 if res:
                     message = res['message'] if 'message' in res else 'Unknown error'
@@ -1209,8 +1209,8 @@ class RepositoryView(APIView):
 class WalletEventsSimulation(APIView):
     def get(self, request, iid, oid, eid):
         # Simulate event subscribe
-        print(oid)
-        print(eid)
+        logger.error(oid)
+        logger.error(eid)
         url = 'http://localhost:9997/agent/objects/{oid}/events/{eid}'.format(oid=oid, eid=eid)
         headers = {'infrastructure-id': 'barter-data-storage',
                    'adapter-id': 'barter-test'}
@@ -1222,11 +1222,11 @@ class WalletEventsSimulation(APIView):
 
     def put(self, request, iid, oid, eid):
         # Simulate event received
-        print(iid)
-        print(oid)
-        print(eid)
-        print('Received data:')
-        print(request.data)
+        logger.error(iid)
+        logger.error(oid)
+        logger.error(eid)
+        logger.error('Received data:')
+        logger.error(request.data)
         return Response({}, status=status.HTTP_200_OK)
 
 
@@ -1249,9 +1249,9 @@ class WalletEventsDash(APIView):
             url = 'http://localhost:9997/agent/events/{}'.format(DASH_EID)
             headers = {'infrastructure-id': BARTER_DASH_OID, 'adapter-id': ADAPTER_ID}
             r = requests.put(url, data=json.dumps(data), headers=headers)
-            print(json.dumps(data))
+            logger.error(json.dumps(data))
         except Exception as e:
-            print(e)
+            logger.error(e)
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
         return Response({}, status=status.HTTP_200_OK)
 
@@ -1274,8 +1274,8 @@ class WalletEventsBitcoin(APIView):
             url = 'http://localhost:9997/agent/events/{}'.format(BITCOIN_EID)
             headers = {'infrastructure-id': BARTER_BITCOIN_OID, 'adapter-id': ADAPTER_ID}
             r = requests.put(url, data=json.dumps(data), headers=headers)
-            print(json.dumps(data))
+            logger.error(json.dumps(data))
         except Exception as e:
-            print(e)
+            logger.error(e)
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
         return Response({}, status=status.HTTP_200_OK)
