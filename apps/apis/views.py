@@ -110,6 +110,7 @@ class WalletActionsDash(APIView):
             try:
                 network_type = input_data['network_type']
                 wallet_secret = input_data['wallet_secret']
+                chainrider_token = input_data['chainrider_token']
             except Exception as e:
                 logger.error(e)
                 data = {
@@ -141,8 +142,45 @@ class WalletActionsDash(APIView):
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
             # call celery task for wallet setup
-            a = instantiate_dash_wallet.delay(token, network_type, wallet_secret, oid, aid)
+            a = instantiate_dash_wallet.delay(token, network_type, wallet_secret, chainrider_token, 'NaN', oid, aid)
+        elif aid == 'wallet_recover':
+            try:
+                network_type = input_data['network_type']
+                wallet_secret = input_data['wallet_secret']
+                chainrider_token = input_data['chainrider_token']
+                private_key = input_data['private_key']
+            except Exception as e:
+                logger.error(e)
+                data = {
+                    'error': 'Invalid input parameters'
+                }
+                url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+                headers = {'infrastructure-id': BARTER_DASH_OID, 'status': 'failed',
+                           'adapter-id': ADAPTER_ID}
+                r = requests.put(url, data=json.dumps(data), headers=headers)
+                data = {
+                    'error': True,
+                    'message': 'Invalid input parameters',
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
+            if network_type not in ['mainnet', 'testnet']:
+                data = {
+                    'error': 'Network type must be mainnet or testnet'
+                }
+                url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+                headers = {'infrastructure-id': BARTER_DASH_OID, 'status': 'failed',
+                           'adapter-id': ADAPTER_ID}
+                r = requests.put(url, data=json.dumps(data), headers=headers)
+                data = {
+                    'error': True,
+                    'message': 'Network type must be mainnet or testnet',
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
+            # call celery task for wallet setup
+            a = instantiate_dash_wallet.delay(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid)
         data = {}
         return Response(data, status=status.HTTP_200_OK)
 
@@ -154,7 +192,7 @@ class WalletActionsBitcoin(APIView):
 
     def post(self, request, oid, aid):
         input_data = request.data
-        if aid not in AID_DASH:
+        if aid not in AID_BITCOIN:
             data = {
                 'error': True,
                 'message': 'Invalid AID',
@@ -198,6 +236,7 @@ class WalletActionsBitcoin(APIView):
             try:
                 network_type = input_data['network_type']
                 wallet_secret = input_data['wallet_secret']
+                chainrider_token = input_data['chainrider_token']
             except Exception as e:
                 logger.error(e)
                 data = {
@@ -229,7 +268,45 @@ class WalletActionsBitcoin(APIView):
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
             # call celery task for wallet setup
-            a = instantiate_bitcoin_wallet.delay(token, network_type, wallet_secret, oid, aid)
+            a = instantiate_bitcoin_wallet.delay(token, network_type, wallet_secret, chainrider_token, 'NaN', oid, aid)
+        elif aid == 'wallet_recover':
+            try:
+                network_type = input_data['network_type']
+                wallet_secret = input_data['wallet_secret']
+                chainrider_token = input_data['chainrider_token']
+                private_key = input_data['private_key']
+            except Exception as e:
+                logger.error(e)
+                data = {
+                    'error': 'Invalid input parameters'
+                }
+                url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+                headers = {'infrastructure-id': BARTER_DASH_OID, 'status': 'failed',
+                           'adapter-id': ADAPTER_ID}
+                r = requests.put(url, data=json.dumps(data), headers=headers)
+                data = {
+                    'error': True,
+                    'message': 'Invalid input parameters',
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
+            if network_type not in ['mainnet', 'testnet']:
+                data = {
+                    'error': 'Network type must be mainnet or testnet'
+                }
+                url = 'http://localhost:9997/agent/actions/{}'.format(aid)
+                headers = {'infrastructure-id': BARTER_DASH_OID, 'status': 'failed',
+                           'adapter-id': ADAPTER_ID}
+                r = requests.put(url, data=json.dumps(data), headers=headers)
+                data = {
+                    'error': True,
+                    'message': 'Network type must be mainnet or testnet',
+                    'status': status.HTTP_400_BAD_REQUEST
+                }
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+            # call celery task for wallet setup
+            a = instantiate_bitcoin_wallet.delay(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid)
         data = {}
         return Response(data, status=status.HTTP_200_OK)
 

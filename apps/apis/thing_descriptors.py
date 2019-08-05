@@ -1,10 +1,10 @@
 PID_DASH = ['my_balance', 'my_funding_address', 'payment_address', 'private_key', 'send_payment', 'ticker']
 
-AID_DASH = ['wallet_setup']
+AID_DASH = ['wallet_setup','wallet_recover']
 
 PID_BITCOIN = ['my_balance', 'my_funding_address', 'payment_address', 'private_key', 'send_payment', 'ticker']
 
-AID_BITCOIN = ['wallet_setup']
+AID_BITCOIN = ['wallet_setup','wallet_recover']
 
 PID_REPOSITORY = ['create_asset', 'read_asset_by_key', 'update_asset', 'invalidate_asset', 'read_assets_by_key_range',
                   'read_asset_history', 'couchdb_query_assets']
@@ -795,7 +795,62 @@ ACTION_WALLET_SETUP_DASH = {
                     "schema": {
                         "type": "string"
                     }
+                },
+                {
+                    "name": "chainrider_token",
+                    "schema": {
+                        "type": "string"
+                    }
                 }
+            ]
+        },
+        "output": {
+            "type": "object",
+            "field": [
+                {
+                    "name": "wallet_name",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        }
+    },
+    "affects": "adapters:DimmingLevel"
+}
+
+ACTION_WALLET_RECOVER_DASH = {
+    "aid": "wallet_recover",
+    "write_link": {
+        "href": "/wallets/dash/{oid}/actions/{aid}",
+        "input": {
+            "type": "object",
+            "field": [
+                {
+                    "name": "network_type",
+                    "description": "Supported types are: 'mainnet' and 'testnet'.",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "wallet_secret",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "chainrider_token",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "private_key",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
             ]
         },
         "output": {
@@ -832,6 +887,12 @@ ACTION_WALLET_SETUP_BITCOIN = {
                     "schema": {
                         "type": "string"
                     }
+                },
+                {
+                    "name": "chainrider_token",
+                    "schema": {
+                        "type": "string"
+                    }
                 }
             ]
         },
@@ -849,6 +910,56 @@ ACTION_WALLET_SETUP_BITCOIN = {
     },
     "affects": "adapters:DimmingLevel"
 }
+
+ACTION_WALLET_RECOVER_BITCOIN = {
+    "aid": "wallet_recover",
+    "write_link": {
+        "href": "/wallets/bitcoin/{oid}/actions/{aid}",
+        "input": {
+            "type": "object",
+            "field": [
+                {
+                    "name": "network_type",
+                    "description": "Supported types are: 'mainnet' and 'testnet'.",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "wallet_secret",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "chainrider_token",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                 {
+                    "name": "private_key",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "output": {
+            "type": "object",
+            "field": [
+                {
+                    "name": "wallet_name",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ]
+        }
+    },
+    "affects": "adapters:DimmingLevel"
+}
+
 
 SETUP_REPOSITORY = {
     "aid": "repository_setup",

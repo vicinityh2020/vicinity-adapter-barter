@@ -18,7 +18,7 @@ def random_string_digits(string_length=32):
 
 
 @shared_task
-def instantiate_dash_wallet(token, network_type, wallet_secret, oid, aid):
+def instantiate_dash_wallet(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid):
 
     # Call API to install wallet chaincode
     url = '{url}/chaincodes'.format(url=BARTER_URL)
@@ -64,7 +64,7 @@ def instantiate_dash_wallet(token, network_type, wallet_secret, oid, aid):
         "chaincodeName": wallet_name,
         "chaincodeVersion": "v0",
         "chaincodeType": "node",
-        "args": [network_type, wallet_secret],
+        "args": [network_type, wallet_secret, chainrider_token, private_key],
         "policy": {
             "identities": [
                 {"role":
@@ -120,7 +120,7 @@ def instantiate_dash_wallet(token, network_type, wallet_secret, oid, aid):
 
 
 @shared_task
-def instantiate_bitcoin_wallet(token, network_type, wallet_secret, oid, aid):
+def instantiate_bitcoin_wallet(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid):
     # Call API to install wallet chaincode
     url = '{url}/chaincodes'.format(url=BARTER_URL)
     wallet_name = random_string_digits()  # random wallet name
@@ -165,7 +165,7 @@ def instantiate_bitcoin_wallet(token, network_type, wallet_secret, oid, aid):
         "chaincodeName": wallet_name,
         "chaincodeVersion": "v0",
         "chaincodeType": "node",
-        "args": [network_type, wallet_secret],
+        "args": [network_type, wallet_secret, chainrider_token, private_key],
         "policy": {
             "identities": [
                 {"role":
