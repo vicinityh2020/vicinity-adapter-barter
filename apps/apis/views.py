@@ -28,7 +28,7 @@ class ObjectsView(APIView):
                 'properties': [MY_BALANCE_DASH, MY_FUNDING_ADDRESS_DASH, PAYMENT_ADDRESS_DASH, TICKER_DASH,
                                PRIVATE_KEY_DASH, SEND_PAYMENT_DASH],
                 'events': [PAYMENT_EVENT_DASH],
-                'actions': [ACTION_WALLET_SETUP_DASH]
+                'actions': [ACTION_WALLET_SETUP_DASH, ACTION_WALLET_RECOVER_DASH]
             },
             {
                 'oid': BARTER_BITCOIN_OID,
@@ -39,7 +39,7 @@ class ObjectsView(APIView):
                 'properties': [MY_BALANCE_BITCOIN, MY_FUNDING_ADDRESS_BITCOIN, PAYMENT_ADDRESS_BITCOIN, TICKER_BITCOIN,
                                PRIVATE_KEY_BITCOIN, SEND_PAYMENT_BITCOIN],
                 'events': [PAYMENT_EVENT_BITCOIN],
-                'actions': [ACTION_WALLET_SETUP_BITCOIN]
+                'actions': [ACTION_WALLET_SETUP_BITCOIN, ACTION_WALLET_RECOVER_BITCOIN]
             },
             {
                 'oid': BARTER_REPOSITORY_OID,
