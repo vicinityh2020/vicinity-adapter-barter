@@ -30,6 +30,7 @@ def instantiate_dash_wallet(token, network_type, wallet_secret, chainrider_token
         "chaincodeType": "node",
         "chaincodeVersion": "v0"
     }
+    logger.error("Payload for instalation: {}".format(str(payload)))
     headers = {'Content-Type': 'application/json',
                'Authorization': 'Bearer {}'.format(token)}
     try:
@@ -131,6 +132,8 @@ def instantiate_bitcoin_wallet(token, network_type, wallet_secret, chainrider_to
         "chaincodeType": "node",
         "chaincodeVersion": "v0"
     }
+    logger.error("Payload for instalation: {}".format(str(payload)))
+
     headers = {'Content-Type': 'application/json',
                'Authorization': 'Bearer {}'.format(token)}
     try:
@@ -230,6 +233,7 @@ def instantiate_data_storage(token, secret, oid, aid):
         "chaincodeType": "node",
         "chaincodeVersion": "v0"
     }
+    logger.error("Payload for instalation: {}".format(str(payload)))
     headers = {'Content-Type': 'application/json',
                'Authorization': 'Bearer {}'.format(token)}
     try:
