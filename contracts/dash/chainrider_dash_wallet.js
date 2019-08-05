@@ -12,6 +12,8 @@ let privateKey = ''
 let address = ''
 let network = ''
 let secret = ''
+let private_key_string = ''
+
 // Addresses
 let ip_address_main = 'https://api.chainrider.io/v1/dash/main'
 let ip_address_testnet = 'https://api.chainrider.io/v1/dash/testnet'
@@ -29,17 +31,18 @@ let Chaincode = class {
     }
 
     logger.level = 'info'
-    let blockchain = args[0]
-    let secret = args[1]
-    let token = args[2]
-    let private_key_string = args[3]
-    let private_key = ''
+    blockchain = args[0]
+    secret = args[1]
+    token = args[2]
+    private_key_string = args[3]
+
+    logger.info('blockchain %s', blockchain)
 
     //generating new private key
     if (private_key_string == 'NaN')
-        privateKey = new bitcore.PrivateKey();
+        privateKey = new dashcore.PrivateKey();
     else
-        privateKey = new bitcore.PrivateKey(private_key_string);
+        privateKey = new dashcore.PrivateKey(private_key_string);
 
     if ( !(blockchain == 'main' || blockchain == 'testnet') ){
       return shim.error('Unsupported blockchain network');
@@ -49,8 +52,8 @@ let Chaincode = class {
     else
       base_url = ip_address_testnet
 
-    let network = dashcore.Networks.livenet
-    let address = privateKey.toAddress(network);
+    network = dashcore.Networks.livenet
+    address = privateKey.toAddress(network);
     if(blockchain=='testnet'){
         network = dashcore.Networks.testnet
         address = privateKey.toAddress(network);
