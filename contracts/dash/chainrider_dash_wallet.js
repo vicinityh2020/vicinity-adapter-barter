@@ -13,9 +13,9 @@ let address = ''
 let network = ''
 let secret = ''
 // Addresses
-let ip_address_main = 'https://api.dot.chainrider.io/v1/dash/main'
-let ip_address_testnet = 'https://api.dot.chainrider.io/v1/dash/testnet'
-let base_url_ticker = 'https://api.dot.vizlorepaymentprocessor.appspot.com/v1/finance'
+let ip_address_main = 'https://api.chainrider.io/v1/dash/main'
+let ip_address_testnet = 'https://api.chainrider.io/v1/dash/testnet'
+let base_url_ticker = 'https://api.chainrider.io/v1/finance'
 let base_url = ''
 
 let Chaincode = class {
