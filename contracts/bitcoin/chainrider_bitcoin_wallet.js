@@ -15,7 +15,7 @@ let secret = ''
 // Addresses
 let ip_address_main = 'https://api.chainrider.io/v1/bitcoin/main'
 let ip_address_testnet = 'https://api.chainrider.io/v1/bitcoin/testnet'
-let base_url_ticker = 'https://api-dot-vizlorepaymentprocessor.appspot.com/v1/finance'
+let base_url_ticker = 'https://api.dot.vizlorepaymentprocessor.appspot.com/v1/finance'
 let base_url = ''
 
 let Chaincode = class {

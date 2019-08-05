@@ -356,7 +356,7 @@ class WalletViewDash(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
                                                                            chaincode=wallet_name)
             peer = random.choice(DASH_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getBalance', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -404,7 +404,7 @@ class WalletViewDash(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
                                                                            chaincode=wallet_name)
             peer = random.choice(DASH_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getFundingAddress', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -441,7 +441,7 @@ class WalletViewDash(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
                                                                            chaincode=wallet_name)
             peer = random.choice(DASH_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getPaymentAddress', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -481,7 +481,7 @@ class WalletViewDash(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
                                                                            chaincode=wallet_name)
             peer = random.choice(DASH_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getPrivateKey', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -521,7 +521,7 @@ class WalletViewDash(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
                                                                            chaincode=wallet_name)
             peer = random.choice(DASH_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
 
             payload = {'peer': peer, 'fcn': 'pay',
                        'args': '["{}", "{}", "{}", "{}"]'.format(wallet_secret, destination_address, amount_duffs,
@@ -560,7 +560,7 @@ class WalletViewDash(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
                                                                            chaincode=wallet_name)
             peer = random.choice(DASH_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
 
             payload = {'peer': peer, 'fcn': 'ticker', 'args': '[""]'}
             headers = {'Content-Type': 'application/json',
@@ -635,7 +635,7 @@ class WalletViewBitcoin(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
                                                                            chaincode=wallet_name)
             peer = random.choice(DASH_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getBalance', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -682,7 +682,7 @@ class WalletViewBitcoin(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
                                                                            chaincode=wallet_name)
             peer = random.choice(DASH_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getFundingAddress', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -719,7 +719,7 @@ class WalletViewBitcoin(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
                                                                            chaincode=wallet_name)
             peer = random.choice(DASH_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getPaymentAddress', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -759,7 +759,7 @@ class WalletViewBitcoin(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
                                                                            chaincode=wallet_name)
             peer = random.choice(DASH_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getPrivateKey', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -798,7 +798,7 @@ class WalletViewBitcoin(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
                                                                            chaincode=wallet_name)
             peer = random.choice(DASH_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'pay',
                        'args': '["{}", "{}", "{}"]'.format(wallet_secret, destination_address, amount_satoshis
                                                            )}
@@ -836,7 +836,7 @@ class WalletViewBitcoin(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
                                                                            chaincode=wallet_name)
             peer = random.choice(DASH_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'ticker', 'args': '[""]'}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -955,7 +955,7 @@ class RepositoryView(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
             peer = random.choice(REPOSITORY_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'read',
                        'args': '["{}", "{}"]'.format(repository_secret, asset_key)}
             headers = {'Content-Type': 'application/json',
@@ -1096,7 +1096,7 @@ class RepositoryView(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
             peer = random.choice(REPOSITORY_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getAssetByKeyRange',
                        'args': '["{}", "{}", "{}"]'.format(repository_secret, key_from, key_to)}
             headers = {'Content-Type': 'application/json',
@@ -1142,7 +1142,7 @@ class RepositoryView(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
             peer = random.choice(REPOSITORY_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getHistoryForAsset',
                        'args': '["{}", "{}"]'.format(repository_secret, asset_key)}
             headers = {'Content-Type': 'application/json',
@@ -1180,7 +1180,7 @@ class RepositoryView(APIView):
             url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
             peer = random.choice(REPOSITORY_PEERS)
-            logger.debug('Running action on peer: {}'.format(peer))
+            logger.error('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'queryAssets',
                        'args': '["{}", "{}"]'.format(repository_secret, query.replace('"', '\\"'))}
             print(payload)
