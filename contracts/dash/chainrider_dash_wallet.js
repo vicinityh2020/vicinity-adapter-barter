@@ -29,13 +29,11 @@ let Chaincode = class {
     }
 
     logger.level = 'info'
-    blockchain = args[0]
-    secret = args[1]
-    token = args[2]
-    private_key_string = args[3]
-    private_key = ''
-
-    logger.info('blockchain %s', blockchain)
+    let blockchain = args[0]
+    let secret = args[1]
+    let token = args[2]
+    let private_key_string = args[3]
+    let private_key = ''
 
     //generating new private key
     if (private_key_string == 'NaN')
@@ -51,8 +49,8 @@ let Chaincode = class {
     else
       base_url = ip_address_testnet
 
-    network = dashcore.Networks.livenet
-    address = privateKey.toAddress(network);
+    let network = dashcore.Networks.livenet
+    let address = privateKey.toAddress(network);
     if(blockchain=='testnet'){
         network = dashcore.Networks.testnet
         address = privateKey.toAddress(network);
