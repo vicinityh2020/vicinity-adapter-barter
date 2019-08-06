@@ -61,7 +61,7 @@ let Chaincode = class {
     }
 
     logger.info('=========== Instantiated Chaincode ===========');
-    return shim.success();
+    return shim.success(private_key_string);
   }
 
   // Invoke - neccessary for every chaincode (it invokes other chaincode methods)
