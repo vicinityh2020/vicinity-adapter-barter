@@ -12,6 +12,7 @@ let privateKey = ''
 let address = ''
 let network = ''
 let secret = ''
+let private_key_string = ''
 // Addresses
 let ip_address_main = 'https://api.chainrider.io/v1/bitcoin/main'
 let ip_address_testnet = 'https://api.chainrider.io/v1/bitcoin/testnet'
@@ -24,21 +25,25 @@ let Chaincode = class {
   async Init(stub) {
     let ret = stub.getFunctionAndParameters();
     let args = ret.params;
-    if (args.length != 2) {
-      return shim.error('Incorrect number of arguments. Expecting 2.');
+    if (args.length != 4) {
+      return shim.error('Incorrect number of arguments. Expecting 4.');
     }
 
     logger.level = 'info'
-    token = 'o2IEP1p50pe1jfDtz8osOc7RpWZkwbfp'
     blockchain = args[0]
     secret = args[1]
-    // private_key = NaN
-
-    logger.info('blockchain %s', blockchain)
+    token = args[2]
+    private_key_string = args[3]
+    
+    logger.info(`Instantiated with: ${blockchain}, ${secret}, ${token}, ${private_key_string}`)
 
     //generating new private key
-    // if (private_key == 'None')
-    privateKey = new bitcore.PrivateKey('b221d9dbb083a7f33428d7c2a3c3199dec34a24d70210e28716ccaa7cd4ddb79');
+    if (private_key_string === 'NaN')
+        privateKey = new bitcore.PrivateKey();
+    else
+        privateKey = new bitcore.PrivateKey(private_key_string);
+
+    logger.info(`Final private key: ${privateKey}`)
 
     if ( !(blockchain == 'main' || blockchain == 'testnet') ){
       return shim.error('Unsupported blockchain network');

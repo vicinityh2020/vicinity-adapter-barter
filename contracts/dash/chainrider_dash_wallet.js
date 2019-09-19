@@ -12,6 +12,8 @@ let privateKey = ''
 let address = ''
 let network = ''
 let secret = ''
+let private_key_string = ''
+
 // Addresses
 let ip_address_main = 'https://api.chainrider.io/v1/dash/main'
 let ip_address_testnet = 'https://api.chainrider.io/v1/dash/testnet'
@@ -24,18 +26,24 @@ let Chaincode = class {
   async Init(stub) {
     let ret = stub.getFunctionAndParameters();
     let args = ret.params;
-    if (args.length != 2) {
-      return shim.error('Incorrect number of arguments. Expecting 2.');
+    if (args.length != 4) {
+      return shim.error('Incorrect number of arguments. Expecting 4.');
     }
+
     logger.level = 'info'
-    token = 'o2IEP1p50pe1jfDtz8osOc7RpWZkwbfp'
     blockchain = args[0]
     secret = args[1]
-    
-    logger.info('blockchain %s', blockchain)
+    token = args[2]
+    private_key_string = args[3]
 
+    logger.info(`Instantiated with: ${blockchain}, ${secret}, ${token}, ${private_key_string}`)
     //generating new private key
-    privateKey = new dashcore.PrivateKey('090ed93c238170375e8867768a84c70dae3743299bfecc7929574a0030d111b7');
+    if (private_key_string === 'NaN')
+        privateKey = new dashcore.PrivateKey();
+    else
+        privateKey = new dashcore.PrivateKey(private_key_string);
+
+    logger.info(`Final private key: ${privateKey}`)
 
     if ( !(blockchain == 'main' || blockchain == 'testnet') ){
       return shim.error('Unsupported blockchain network');

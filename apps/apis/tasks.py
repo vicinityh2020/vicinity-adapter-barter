@@ -18,18 +18,19 @@ def random_string_digits(string_length=32):
 
 
 @shared_task
-def instantiate_dash_wallet(token, network_type, wallet_secret, oid, aid):
-
+def instantiate_dash_wallet(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid):
+    logger.info("instantiate_bitcoin_wallet called with: token - {}; key - {}".format(chainrider_token, private_key))
     # Call API to install wallet chaincode
     url = '{url}/chaincodes'.format(url=BARTER_URL)
     wallet_name = random_string_digits()  # random wallet name
     payload = {
         "peers": DASH_PEERS,
         "chaincodeName": wallet_name,
-        "chaincodePath": "/home/chainrider-56c03/contracts/dash/",
+        "chaincodePath": "/home/chainrider-56c03/contracts_production/dash/",
         "chaincodeType": "node",
         "chaincodeVersion": "v0"
     }
+    logger.info("Payload for instalation: {}".format(str(payload)))
     headers = {'Content-Type': 'application/json',
                'Authorization': 'Bearer {}'.format(token)}
     try:
@@ -64,7 +65,7 @@ def instantiate_dash_wallet(token, network_type, wallet_secret, oid, aid):
         "chaincodeName": wallet_name,
         "chaincodeVersion": "v0",
         "chaincodeType": "node",
-        "args": [network_type, wallet_secret],
+        "args": [network_type, wallet_secret, chainrider_token, private_key],
         "policy": {
             "identities": [
                 {"role":
@@ -120,17 +121,20 @@ def instantiate_dash_wallet(token, network_type, wallet_secret, oid, aid):
 
 
 @shared_task
-def instantiate_bitcoin_wallet(token, network_type, wallet_secret, oid, aid):
+def instantiate_bitcoin_wallet(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid):
     # Call API to install wallet chaincode
+    logger.info("instantiate_bitcoin_wallet called with: token - {}; key - {}".format(chainrider_token, private_key))
     url = '{url}/chaincodes'.format(url=BARTER_URL)
     wallet_name = random_string_digits()  # random wallet name
     payload = {
         "peers": BITCOIN_PEERS,
         "chaincodeName": wallet_name,
-        "chaincodePath": "/home/chainrider-56c03/contracts/bitcoin/",
+        "chaincodePath": "/home/chainrider-56c03/contracts_production/bitcoin/",
         "chaincodeType": "node",
         "chaincodeVersion": "v0"
     }
+    logger.info("Payload for instalation: {}".format(str(payload)))
+
     headers = {'Content-Type': 'application/json',
                'Authorization': 'Bearer {}'.format(token)}
     try:
@@ -165,7 +169,7 @@ def instantiate_bitcoin_wallet(token, network_type, wallet_secret, oid, aid):
         "chaincodeName": wallet_name,
         "chaincodeVersion": "v0",
         "chaincodeType": "node",
-        "args": [network_type, wallet_secret],
+        "args": [network_type, wallet_secret, chainrider_token, private_key],
         "policy": {
             "identities": [
                 {"role":
@@ -226,10 +230,11 @@ def instantiate_data_storage(token, secret, oid, aid):
     payload = {
         "peers": REPOSITORY_PEERS,
         "chaincodeName": repo_name,
-        "chaincodePath": "/home/chainrider-56c03/contracts/data_storage/",
+        "chaincodePath": "/home/chainrider-56c03/contracts_production/data_storage/",
         "chaincodeType": "node",
         "chaincodeVersion": "v0"
     }
+    logger.info("Payload for instalation: {}".format(str(payload)))
     headers = {'Content-Type': 'application/json',
                'Authorization': 'Bearer {}'.format(token)}
     try:
