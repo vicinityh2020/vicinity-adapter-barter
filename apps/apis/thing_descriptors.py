@@ -1,10 +1,10 @@
 PID_DASH = ['my_balance', 'my_funding_address', 'payment_address', 'private_key', 'send_payment', 'ticker']
 
-AID_DASH = ['wallet_setup','wallet_recover']
+AID_DASH = ['wallet_setup', 'wallet_recover']
 
 PID_BITCOIN = ['my_balance', 'my_funding_address', 'payment_address', 'private_key', 'send_payment', 'ticker']
 
-AID_BITCOIN = ['wallet_setup','wallet_recover']
+AID_BITCOIN = ['wallet_setup', 'wallet_recover']
 
 PID_REPOSITORY = ['create_asset', 'read_asset_by_key', 'update_asset', 'invalidate_asset', 'read_assets_by_key_range',
                   'read_asset_history', 'couchdb_query_assets']

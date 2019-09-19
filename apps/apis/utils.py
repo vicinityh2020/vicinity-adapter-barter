@@ -1,5 +1,6 @@
 import requests
 import json
+import itertools
 
 ADAPTER_ID = 'barter-test'
 BARTER_DASH_OID = 'barter-micropayment-dash'
@@ -10,7 +11,12 @@ BITCOIN_CHANNEL = 'micropayments'
 DASH_CHANNEL = 'micropayments'
 REPOSITORY_CHANNEL = 'datasharing'
 
-BARTER_URL = 'http://machine1.barter.block-chain-labs.com:4000'
+BARTER_REST_API_LIST = ['http://machine1.barter.block-chain-labs.com:4000',
+                        'http://machine2.barter.block-chain-labs.com:4000',
+                        'http://machine3.barter.block-chain-labs.com:4000',
+                        'http://machine4.barter.block-chain-labs.com:4000',
+                        'http://machine5.barter.block-chain-labs.com:4000'
+                        ]
 
 DASH_PEERS = [
             "peer0.machine1.barter.block-chain-labs.com",
@@ -39,8 +45,14 @@ REPOSITORY_PEERS = [
             "peer12.machine5.barter.block-chain-labs.com"
         ]
 
-def get_access_token():
-    url = '{url}/users/register'.format(url=BARTER_URL)
+url_round_r = itertools.cycle(BARTER_REST_API_LIST)
+micropayment_dash_peers_rr = itertools.cycle(DASH_PEERS)
+micropayment_bitcoin_peers_rr = itertools.cycle(BITCOIN_PEERS)
+repository_peers_rr = itertools.cycle(REPOSITORY_PEERS)
+
+
+def get_access_token(rest_url):
+    url = '{url}/users/register'.format(url=rest_url)
     payload = {
         "username": "barter",
         "orgName": "barter",
@@ -57,3 +69,19 @@ def get_access_token():
     except Exception as e:
         print(e)
         return False
+
+
+def get_rest_url():
+    return next(url_round_r)
+
+
+def get_dash_peer():
+    return next(micropayment_dash_peers_rr)
+
+
+def get_bitcoin_peer():
+    return next(micropayment_bitcoin_peers_rr)
+
+
+def get_repository_peer():
+    return next(repository_peers_rr)

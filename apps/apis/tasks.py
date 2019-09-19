@@ -18,10 +18,10 @@ def random_string_digits(string_length=32):
 
 
 @shared_task
-def instantiate_dash_wallet(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid):
+def instantiate_dash_wallet(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid, rest_url):
     logger.info("instantiate_bitcoin_wallet called with: token - {}; key - {}".format(chainrider_token, private_key))
     # Call API to install wallet chaincode
-    url = '{url}/chaincodes'.format(url=BARTER_URL)
+    url = '{url}/chaincodes'.format(url=rest_url)
     wallet_name = random_string_digits()  # random wallet name
     payload = {
         "peers": DASH_PEERS,
@@ -60,7 +60,7 @@ def instantiate_dash_wallet(token, network_type, wallet_secret, chainrider_token
         return
 
     # Call API to instantiate wallet chaincode
-    url = '{url}/channels/{channel}/chaincodes'.format(url=BARTER_URL, channel=DASH_CHANNEL)
+    url = '{url}/channels/{channel}/chaincodes'.format(url=rest_url, channel=DASH_CHANNEL)
     payload = {
         "chaincodeName": wallet_name,
         "chaincodeVersion": "v0",
@@ -96,8 +96,6 @@ def instantiate_dash_wallet(token, network_type, wallet_secret, chainrider_token
                        'adapter-id': ADAPTER_ID}
             r = requests.put(url, data=json.dumps(data), headers=headers)
             return
-        # store wallet info in the db
-        # TODO
 
         # send info about action completed
         data = {
@@ -121,10 +119,10 @@ def instantiate_dash_wallet(token, network_type, wallet_secret, chainrider_token
 
 
 @shared_task
-def instantiate_bitcoin_wallet(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid):
+def instantiate_bitcoin_wallet(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid, rest_url):
     # Call API to install wallet chaincode
     logger.info("instantiate_bitcoin_wallet called with: token - {}; key - {}".format(chainrider_token, private_key))
-    url = '{url}/chaincodes'.format(url=BARTER_URL)
+    url = '{url}/chaincodes'.format(url=rest_url)
     wallet_name = random_string_digits()  # random wallet name
     payload = {
         "peers": BITCOIN_PEERS,
@@ -164,7 +162,7 @@ def instantiate_bitcoin_wallet(token, network_type, wallet_secret, chainrider_to
         return
 
     # Call API to instantiate wallet chaincode
-    url = '{url}/channels/{channel}/chaincodes'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL)
+    url = '{url}/channels/{channel}/chaincodes'.format(url=rest_url, channel=BITCOIN_CHANNEL)
     payload = {
         "chaincodeName": wallet_name,
         "chaincodeVersion": "v0",
@@ -222,10 +220,11 @@ def instantiate_bitcoin_wallet(token, network_type, wallet_secret, chainrider_to
                    'adapter-id': ADAPTER_ID}
         r = requests.put(url, data=json.dumps(data), headers=headers)
 
+
 @shared_task
-def instantiate_data_storage(token, secret, oid, aid):
+def instantiate_data_storage(token, secret, oid, aid, rest_url):
     # Call API to install wallet chaincode
-    url = '{url}/chaincodes'.format(url=BARTER_URL)
+    url = '{url}/chaincodes'.format(url=rest_url)
     repo_name = random_string_digits()  # random wallet name
     payload = {
         "peers": REPOSITORY_PEERS,
@@ -264,7 +263,7 @@ def instantiate_data_storage(token, secret, oid, aid):
         return
 
     # Call API to instantiate wallet chaincode
-    url = '{url}/channels/{channel}/chaincodes'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL)
+    url = '{url}/channels/{channel}/chaincodes'.format(url=rest_url, channel=REPOSITORY_CHANNEL)
     payload = {
         "chaincodeName": repo_name,
         "chaincodeVersion": "v0",

@@ -1,9 +1,6 @@
 import json
-from datetime import datetime, timezone, timedelta
-import random
 import requests
 import rest_framework.status as status
-from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -15,9 +12,6 @@ from .thing_descriptors import *
 from .utils import *
 
 import itertools
-mciropayment_peers_rr = itertools.cycle(DASH_PEERS)
-datarepo_peers_rr = itertools.cycle(REPOSITORY_PEERS)
-
 
 
 class ObjectsView(APIView):
@@ -94,8 +88,9 @@ class WalletActionsDash(APIView):
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
-        # Get authentication token
-        token = get_access_token()
+        # Get rest url and authentication token
+        rest_url = get_rest_url()
+        token = get_access_token(rest_url)
         if not token:
             data = {
                 'error': 'Blockchain authentication failed'
@@ -147,7 +142,7 @@ class WalletActionsDash(APIView):
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
             # call celery task for wallet setup
-            a = instantiate_dash_wallet.delay(token, network_type, wallet_secret, chainrider_token, 'NaN', oid, aid)
+            a = instantiate_dash_wallet.delay(token, network_type, wallet_secret, chainrider_token, 'NaN', oid, aid, rest_url)
         elif aid == 'wallet_recover':
             try:
                 network_type = input_data['network_type']
@@ -185,7 +180,7 @@ class WalletActionsDash(APIView):
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
             # call celery task for wallet setup
-            a = instantiate_dash_wallet.delay(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid)
+            a = instantiate_dash_wallet.delay(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid, rest_url)
         data = {}
         return Response(data, status=status.HTTP_200_OK)
 
@@ -220,8 +215,9 @@ class WalletActionsBitcoin(APIView):
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
-        # Get authentication token
-        token = get_access_token()
+        # Get rest url and authentication token
+        rest_url = get_rest_url()
+        token = get_access_token(rest_url)
         if not token:
             data = {
                 'error': 'Blockchain authentication failed'
@@ -273,7 +269,7 @@ class WalletActionsBitcoin(APIView):
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
             # call celery task for wallet setup
-            a = instantiate_bitcoin_wallet.delay(token, network_type, wallet_secret, chainrider_token, 'NaN', oid, aid)
+            a = instantiate_bitcoin_wallet.delay(token, network_type, wallet_secret, chainrider_token, 'NaN', oid, aid, rest_url)
         elif aid == 'wallet_recover':
             try:
                 network_type = input_data['network_type']
@@ -311,7 +307,7 @@ class WalletActionsBitcoin(APIView):
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
             # call celery task for wallet setup
-            a = instantiate_bitcoin_wallet.delay(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid)
+            a = instantiate_bitcoin_wallet.delay(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid, rest_url)
         data = {}
         return Response(data, status=status.HTTP_200_OK)
 
@@ -348,8 +344,9 @@ class RepositoryActions(APIView):
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
-        # Get authentication token
-        token = get_access_token()
+        # Get rest url and authentication token
+        rest_url = get_rest_url()
+        token = get_access_token(rest_url)
         if not token:
             data = {
                 'error': True,
@@ -385,7 +382,7 @@ class RepositoryActions(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            a = instantiate_data_storage.delay(token, repository_secret, oid, aid)
+            a = instantiate_data_storage.delay(token, repository_secret, oid, aid, rest_url)
         data = {}
         return Response(data, status=status.HTTP_200_OK)
 
@@ -410,8 +407,9 @@ class WalletViewDash(APIView):
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
-        # Get authentication token
-        token = get_access_token()
+        # Get rest url and authentication token
+        rest_url = get_rest_url()
+        token = get_access_token(rest_url)
         if not token:
             data = {
                 'error': True,
@@ -420,7 +418,7 @@ class WalletViewDash(APIView):
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
         res = dict()
-
+        peer = get_dash_peer()
         if pid == 'my_balance':
             try:
                 wallet_name = input_data['wallet_name']
@@ -435,10 +433,9 @@ class WalletViewDash(APIView):
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
             # call API for wallet balance
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=DASH_CHANNEL,
                                                                            chaincode=wallet_name)
-            peer = next(mciropayment_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getBalance', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -483,10 +480,9 @@ class WalletViewDash(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             # call API for get address
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=DASH_CHANNEL,
                                                                            chaincode=wallet_name)
-            peer = next(mciropayment_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getFundingAddress', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -520,10 +516,9 @@ class WalletViewDash(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             # call API to get payment address
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=DASH_CHANNEL,
                                                                            chaincode=wallet_name)
-            peer = next(mciropayment_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getPaymentAddress', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -560,10 +555,9 @@ class WalletViewDash(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             # Call get private key
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=DASH_CHANNEL,
                                                                            chaincode=wallet_name)
-            peer = next(mciropayment_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getPrivateKey', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -600,10 +594,9 @@ class WalletViewDash(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             # Send payment
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=DASH_CHANNEL,
                                                                            chaincode=wallet_name)
-            peer = next(mciropayment_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
 
             payload = {'peer': peer, 'fcn': 'pay',
                        'args': '["{}", "{}", "{}", "{}"]'.format(wallet_secret, destination_address, amount_duffs,
@@ -639,10 +632,9 @@ class WalletViewDash(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             # Call get ticker
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=DASH_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=DASH_CHANNEL,
                                                                            chaincode=wallet_name)
-            peer = next(mciropayment_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
 
             payload = {'peer': peer, 'fcn': 'ticker', 'args': '[""]'}
             headers = {'Content-Type': 'application/json',
@@ -690,8 +682,9 @@ class WalletViewBitcoin(APIView):
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
-        # Get authentication token
-        token = get_access_token()
+        # Get rest url and authentication token
+        rest_url = get_rest_url()
+        token = get_access_token(rest_url)
         if not token:
             data = {
                 'error': True,
@@ -700,7 +693,7 @@ class WalletViewBitcoin(APIView):
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
         res = dict()
-
+        peer = get_bitcoin_peer()
         if pid == 'my_balance':
             try:
                 wallet_name = input_data['wallet_name']
@@ -714,10 +707,9 @@ class WalletViewBitcoin(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             # call API for wallet balance
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=BITCOIN_CHANNEL,
                                                                            chaincode=wallet_name)
-            peer = next(mciropayment_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getBalance', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -761,10 +753,9 @@ class WalletViewBitcoin(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             # call API for get address
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=BITCOIN_CHANNEL,
                                                                            chaincode=wallet_name)
-            peer = next(mciropayment_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getFundingAddress', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -798,10 +789,9 @@ class WalletViewBitcoin(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             # call API to get payment address
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=BITCOIN_CHANNEL,
                                                                            chaincode=wallet_name)
-            peer = next(mciropayment_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getPaymentAddress', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -838,10 +828,9 @@ class WalletViewBitcoin(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             # Call get private key
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=BITCOIN_CHANNEL,
                                                                            chaincode=wallet_name)
-            peer = next(mciropayment_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getPrivateKey', 'args': '["{}"]'.format(wallet_secret)}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -877,10 +866,9 @@ class WalletViewBitcoin(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             # Send payment
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=BITCOIN_CHANNEL,
                                                                            chaincode=wallet_name)
-            peer = next(mciropayment_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'pay',
                        'args': '["{}", "{}", "{}"]'.format(wallet_secret, destination_address, amount_satoshis
                                                            )}
@@ -915,10 +903,9 @@ class WalletViewBitcoin(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
             # Call get ticker
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=BITCOIN_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=BITCOIN_CHANNEL,
                                                                            chaincode=wallet_name)
-            peer = next(mciropayment_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'ticker', 'args': '[""]'}
             headers = {'Content-Type': 'application/json',
                        'Authorization': 'Bearer {}'.format(token)}
@@ -965,8 +952,9 @@ class RepositoryView(APIView):
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
-        # Get authentication token
-        token = get_access_token()
+        # Get rest url and authentication token
+        rest_url = get_rest_url()
+        token = get_access_token(rest_url)
         if not token:
             data = {
                 'error': True,
@@ -975,6 +963,7 @@ class RepositoryView(APIView):
             }
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
         res = dict()
+        peer = get_repository_peer()
         if pid == 'create_asset':
             try:
                 repository_name = input_data['repository_name']
@@ -989,7 +978,7 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
             payload = {
                 'fcn': 'create',
@@ -1034,10 +1023,9 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
-            peer = next(datarepo_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'read',
                        'args': '["{}", "{}"]'.format(repository_secret, asset_key)}
             headers = {'Content-Type': 'application/json',
@@ -1081,7 +1069,7 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
             payload = {'fcn': 'update',
                        'args': [repository_secret, asset_key, asset_new_value]
@@ -1128,7 +1116,7 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
             payload = {'fcn': 'delete',
                        'args': [repository_secret, asset_key]
@@ -1175,10 +1163,9 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
-            peer = next(datarepo_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getAssetByKeyRange',
                        'args': '["{}", "{}", "{}"]'.format(repository_secret, key_from, key_to)}
             headers = {'Content-Type': 'application/json',
@@ -1221,10 +1208,9 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
-            peer = next(datarepo_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'getHistoryForAsset',
                        'args': '["{}", "{}"]'.format(repository_secret, asset_key)}
             headers = {'Content-Type': 'application/json',
@@ -1259,10 +1245,9 @@ class RepositoryView(APIView):
                     'status': status.HTTP_400_BAD_REQUEST
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
-            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=BARTER_URL, channel=REPOSITORY_CHANNEL,
+            url = '{url}/channels/{channel}/chaincodes/{chaincode}'.format(url=rest_url, channel=REPOSITORY_CHANNEL,
                                                                            chaincode=repository_name)
-            peer = next(datarepo_peers_rr)
-            logger.error('Running action on peer: {}'.format(peer))
+            logger.info('Running action on peer: {}'.format(peer))
             payload = {'peer': peer, 'fcn': 'queryAssets',
                        'args': '["{}", "{}"]'.format(repository_secret, query.replace('"', '\\"'))}
             logger.error(payload)
@@ -1291,8 +1276,6 @@ class RepositoryView(APIView):
 class WalletEventsSimulation(APIView):
     def get(self, request, iid, oid, eid):
         # Simulate event subscribe
-        logger.error(oid)
-        logger.error(eid)
         url = 'http://localhost:9997/agent/objects/{oid}/events/{eid}'.format(oid=oid, eid=eid)
         headers = {'infrastructure-id': 'barter-data-storage',
                    'adapter-id': 'barter-test'}
@@ -1304,11 +1287,8 @@ class WalletEventsSimulation(APIView):
 
     def put(self, request, iid, oid, eid):
         # Simulate event received
-        logger.error(iid)
-        logger.error(oid)
-        logger.error(eid)
-        logger.error('Received data:')
-        logger.error(request.data)
+        logger.info('Received data:')
+        logger.info(request.data)
         return Response({}, status=status.HTTP_200_OK)
 
 
@@ -1331,7 +1311,7 @@ class WalletEventsDash(APIView):
             url = 'http://localhost:9997/agent/events/{}'.format(DASH_EID)
             headers = {'infrastructure-id': BARTER_DASH_OID, 'adapter-id': ADAPTER_ID}
             r = requests.put(url, data=json.dumps(data), headers=headers)
-            logger.error(json.dumps(data))
+            logger.info(json.dumps(data))
         except Exception as e:
             logger.error(e)
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
@@ -1356,7 +1336,7 @@ class WalletEventsBitcoin(APIView):
             url = 'http://localhost:9997/agent/events/{}'.format(BITCOIN_EID)
             headers = {'infrastructure-id': BARTER_BITCOIN_OID, 'adapter-id': ADAPTER_ID}
             r = requests.put(url, data=json.dumps(data), headers=headers)
-            logger.error(json.dumps(data))
+            logger.info(json.dumps(data))
         except Exception as e:
             logger.error(e)
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
