@@ -13,7 +13,7 @@ AID_REPOSITORY = ['repository_setup']
 
 MY_BALANCE_DASH = {
     "pid": "my_balance",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:WalletBalance",
     "write_link": {
         "href": "/wallets/dash/property/{pid}",
         "input": {
@@ -109,7 +109,7 @@ MY_BALANCE_DASH = {
 
 MY_BALANCE_BITCOIN = {
     "pid": "my_balance",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:WalletBalance",
     "write_link": {
         "href": "/wallets/bitcoin/property/{pid}",
         "input": {
@@ -205,7 +205,7 @@ MY_BALANCE_BITCOIN = {
 
 MY_FUNDING_ADDRESS_DASH = {
     "pid": "my_funding_address",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:WalletFundingAddress",
     "write_link": {
         "href": "/wallets/dash/property/{pid}",
         "input": {
@@ -241,7 +241,7 @@ MY_FUNDING_ADDRESS_DASH = {
 
 MY_FUNDING_ADDRESS_BITCOIN = {
     "pid": "my_funding_address",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:WalletFundingAddress",
     "write_link": {
         "href": "/wallets/bitcoin/property/{pid}",
         "input": {
@@ -277,7 +277,7 @@ MY_FUNDING_ADDRESS_BITCOIN = {
 
 PAYMENT_ADDRESS_DASH = {
     "pid": "payment_address",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:WalletPaymentForward",
     "write_link": {
         "href": "/wallets/dash/property/{pid}",
         "input": {
@@ -331,7 +331,7 @@ PAYMENT_ADDRESS_DASH = {
 
 PAYMENT_ADDRESS_BITCOIN = {
     "pid": "payment_address",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:WalletPaymentForward",
     "write_link": {
         "href": "/wallets/bitcoin/property/{pid}",
         "input": {
@@ -385,7 +385,7 @@ PAYMENT_ADDRESS_BITCOIN = {
 
 TICKER_DASH = {
     "pid": "ticker",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:WalletValue",
     "write_link": {
         "href": "/wallets/dash/property/{pid}",
         "input": {
@@ -433,7 +433,7 @@ TICKER_DASH = {
 
 TICKER_BITCOIN = {
     "pid": "ticker",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:WalletValue",
     "write_link": {
         "href": "/wallets/bitcoin/property/{pid}",
         "input": {
@@ -481,7 +481,7 @@ TICKER_BITCOIN = {
 
 PRIVATE_KEY_DASH = {
     "pid": "private_key",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:WalletPrivateKey",
     "write_link": {
         "href": "/wallets/dash/property/{pid}",
         "input": {
@@ -517,7 +517,7 @@ PRIVATE_KEY_DASH = {
 
 PRIVATE_KEY_BITCOIN = {
     "pid": "private_key",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:WalletPrivateKey",
     "write_link": {
         "href": "/wallets/bitcoin/property/{pid}",
         "input": {
@@ -553,7 +553,7 @@ PRIVATE_KEY_BITCOIN = {
 
 SEND_PAYMENT_DASH = {
     "pid": "send_payment",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:WalletTransactions",
     "write_link": {
         "href": "/wallets/dash/property/{pid}",
         "input": {
@@ -607,7 +607,7 @@ SEND_PAYMENT_DASH = {
 
 SEND_PAYMENT_BITCOIN = {
     "pid": "send_payment",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:WalletTransactions",
     "write_link": {
         "href": "/wallets/bitcoin/property/{pid}",
         "input": {
@@ -656,7 +656,7 @@ SEND_PAYMENT_BITCOIN = {
 DASH_EID = "dash_payments"
 PAYMENT_EVENT_DASH = {
     "eid": DASH_EID,
-    "monitors": "adapters:MeanPowerConsumption",
+    "monitors": "adapters:WalletTransactions",
     "output": {
         "type": "object",
         "field": [
@@ -721,7 +721,7 @@ BITCOIN_EID = "bitcoin_payments"
 
 PAYMENT_EVENT_BITCOIN = {
     "eid": BITCOIN_EID,
-    "monitors": "adapters:MeanPowerConsumption",
+    "monitors": "adapters:WalletTransactions",
     "output": {
         "type": "object",
         "field": [
@@ -816,7 +816,7 @@ ACTION_WALLET_SETUP_DASH = {
             ]
         }
     },
-    "affects": "adapters:DimmingLevel"
+    "affects": "adapters:DashWallet"
 }
 
 ACTION_WALLET_RECOVER_DASH = {
@@ -865,7 +865,7 @@ ACTION_WALLET_RECOVER_DASH = {
             ]
         }
     },
-    "affects": "adapters:DimmingLevel"
+    "affects": "adapters:DashWallet"
 }
 
 ACTION_WALLET_SETUP_BITCOIN = {
@@ -908,7 +908,7 @@ ACTION_WALLET_SETUP_BITCOIN = {
             ]
         }
     },
-    "affects": "adapters:DimmingLevel"
+    "affects": "adapters:BitcoinWallet"
 }
 
 ACTION_WALLET_RECOVER_BITCOIN = {
@@ -957,7 +957,7 @@ ACTION_WALLET_RECOVER_BITCOIN = {
             ]
         }
     },
-    "affects": "adapters:DimmingLevel"
+    "affects": "adapters:BitcoinWallet"
 }
 
 
@@ -988,12 +988,12 @@ SETUP_REPOSITORY = {
             ]
         }
     },
-    "affects": "adapters:DimmingLevel"
+    "affects": "adapters:Repository"
 }
 
 CREATE_ASSET = {
     "pid": "create_asset",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:RepositoryDigitalAsset",
     "write_link": {
         "href": "/repositories/property/{pid}",
         "input": {
@@ -1041,7 +1041,7 @@ CREATE_ASSET = {
 
 READ_ASSET_BY_KEY = {
     "pid": "read_asset_by_key",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:RepositoryDigitalAsset",
     "write_link": {
         "href": "/repositories/property/{pid}",
         "input": {
@@ -1097,7 +1097,7 @@ READ_ASSET_BY_KEY = {
 
 UPDATE_ASSET = {
     "pid": "update_asset",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:RepositoryDigitalAsset",
     "write_link": {
         "href": "/repositories/property/{pid}",
         "input": {
@@ -1145,7 +1145,7 @@ UPDATE_ASSET = {
 
 INVALIDATE_ASSET = {
     "pid": "invalidate_asset",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:RepositoryDigitalAsset",
     "write_link": {
         "href": "/repositories/property/{pid}",
         "input": {
@@ -1187,7 +1187,7 @@ INVALIDATE_ASSET = {
 
 READ_ASSETS_BY_KEY_RANGE = {
     "pid": "read_assets_by_key_range",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:RepositoryDigitalAsset",
     "write_link": {
         "href": "/repositories/property/{pid}",
         "input": {
@@ -1265,7 +1265,7 @@ READ_ASSETS_BY_KEY_RANGE = {
 
 READ_ASSET_HISTORY = {
     "pid": "read_asset_history",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:RepositoryDigitalAsset",
     "write_link": {
         "href": "/repositories/property/{pid}",
         "input": {
@@ -1384,7 +1384,7 @@ READ_ASSET_HISTORY = {
 
 COUCHDB_QUERY_ASSETS = {
     "pid": "couchdb_query_assets",
-    "monitors": "adapters:Start",
+    "monitors": "adapters:RepositoryDigitalAsset",
     "write_link": {
         "href": "/repositories/property/{pid}",
         "input": {
