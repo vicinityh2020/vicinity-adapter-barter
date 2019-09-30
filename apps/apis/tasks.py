@@ -26,7 +26,7 @@ def instantiate_dash_wallet(token, network_type, wallet_secret, chainrider_token
     payload = {
         "peers": DASH_PEERS,
         "chaincodeName": wallet_name,
-        "chaincodePath": "/home/chainrider-56c03/contracts_production/dash/",
+        "chaincodePath": "/home/chainrider-bbdaa/contracts_production/dash/",
         "chaincodeType": "node",
         "chaincodeVersion": "v0"
     }
@@ -127,7 +127,7 @@ def instantiate_bitcoin_wallet(token, network_type, wallet_secret, chainrider_to
     payload = {
         "peers": BITCOIN_PEERS,
         "chaincodeName": wallet_name,
-        "chaincodePath": "/home/chainrider-56c03/contracts_production/bitcoin/",
+        "chaincodePath": "/home/chainrider-bbdaa/contracts_production/bitcoin/",
         "chaincodeType": "node",
         "chaincodeVersion": "v0"
     }
@@ -229,7 +229,7 @@ def instantiate_data_storage(token, secret, oid, aid, rest_url):
     payload = {
         "peers": REPOSITORY_PEERS,
         "chaincodeName": repo_name,
-        "chaincodePath": "/home/chainrider-56c03/contracts_production/data_storage/",
+        "chaincodePath": "/home/chainrider-bbdaa/contracts_production/data_storage/",
         "chaincodeType": "node",
         "chaincodeVersion": "v0"
     }

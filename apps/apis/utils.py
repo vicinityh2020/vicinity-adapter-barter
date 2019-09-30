@@ -18,6 +18,14 @@ BARTER_REST_API_LIST = ['http://machine1.barter.block-chain-labs.com:4000',
                         'http://machine5.barter.block-chain-labs.com:4000'
                         ]
 
+BARTER_REST_API_USERS = {
+    'http://machine1.barter.block-chain-labs.com:4000': "m",
+    'http://machine2.barter.block-chain-labs.com:4000': "m2",
+    'http://machine3.barter.block-chain-labs.com:4000': "m3",
+    'http://machine4.barter.block-chain-labs.com:4000': "m4",
+    'http://machine5.barter.block-chain-labs.com:4000': "m5"
+}
+
 DASH_PEERS = [
             "peer0.machine1.barter.block-chain-labs.com",
             "peer1.machine1.barter.block-chain-labs.com",
@@ -54,10 +62,10 @@ repository_peers_rr = itertools.cycle(REPOSITORY_PEERS)
 def get_access_token(rest_url):
     url = '{url}/users/register'.format(url=rest_url)
     payload = {
-        "username": "barter",
+        "username": BARTER_REST_API_USERS[rest_url],
         "orgName": "barter",
         "role": "client",
-        "secret": "cb164edfcd6a528704b674684a5d0261"
+        "secret": "bba62ebfc40755b67992da31eed47a29"
     }
     headers = {'Content-Type': 'application/json'}
     try:
