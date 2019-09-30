@@ -1,6 +1,8 @@
 import requests
 import json
 import itertools
+import logging
+logger = logging.getLogger(__name__)
 
 ADAPTER_ID = 'barter-test'
 BARTER_DASH_OID = 'barter-micropayment-dash'
@@ -80,7 +82,9 @@ def get_access_token(rest_url):
 
 
 def get_rest_url():
-    return next(url_round_r)
+    uri = next(url_round_r)
+    logger.info('REST API: {}'.format(uri))
+    return uri
 
 
 def get_dash_peer():
