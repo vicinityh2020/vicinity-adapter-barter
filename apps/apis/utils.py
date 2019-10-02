@@ -4,7 +4,7 @@ import itertools
 import logging
 logger = logging.getLogger(__name__)
 
-ADAPTER_ID = 'barter-test'
+ADAPTER_ID = 'barter'
 BARTER_DASH_OID = 'barter-micropayment-dash'
 BARTER_BITCOIN_OID = 'barter-micropayment-bitcoin'
 BARTER_REPOSITORY_OID = 'barter-data-storage'

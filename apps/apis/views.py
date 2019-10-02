@@ -1278,7 +1278,7 @@ class WalletEventsSimulation(APIView):
         # Simulate event subscribe
         url = 'http://localhost:9997/agent/objects/{oid}/events/{eid}'.format(oid=oid, eid=eid)
         headers = {'infrastructure-id': 'barter-data-storage',
-                   'adapter-id': 'barter-test'}
+                   'adapter-id': 'barter'}
         r = requests.post(url, headers=headers)
         data = {
             'subscribed': True
