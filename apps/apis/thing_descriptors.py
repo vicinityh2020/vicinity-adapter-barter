@@ -816,7 +816,7 @@ ACTION_WALLET_SETUP_DASH = {
             ]
         }
     },
-    "affects": "adapters:DashWallet"
+    "affects": "adapters:WalletEntity"
 }
 
 ACTION_WALLET_RECOVER_DASH = {
@@ -865,7 +865,7 @@ ACTION_WALLET_RECOVER_DASH = {
             ]
         }
     },
-    "affects": "adapters:DashWallet"
+    "affects": "adapters:WalletEntity"
 }
 
 ACTION_WALLET_SETUP_BITCOIN = {
@@ -908,7 +908,7 @@ ACTION_WALLET_SETUP_BITCOIN = {
             ]
         }
     },
-    "affects": "adapters:BitcoinWallet"
+    "affects": "adapters:WalletEntity"
 }
 
 ACTION_WALLET_RECOVER_BITCOIN = {
@@ -957,7 +957,7 @@ ACTION_WALLET_RECOVER_BITCOIN = {
             ]
         }
     },
-    "affects": "adapters:BitcoinWallet"
+    "affects": "adapters:WalletEntity"
 }
 
 
@@ -988,7 +988,7 @@ SETUP_REPOSITORY = {
             ]
         }
     },
-    "affects": "adapters:Repository"
+    "affects": "adapters:RepositoyEntity"
 }
 
 CREATE_ASSET = {
