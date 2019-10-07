@@ -991,15 +991,17 @@ class RepositoryView(APIView):
                 res = r.json()
 
                 if not res['success']:
-                    message = res['message']
                     data = {
-                        'error': message
+                        'error': True,
+                        'message': res['message'],
+                        'status': status.HTTP_400_BAD_REQUEST
                     }
-                else:
-                    tx_id =res['message'].split(':')[1].strip()
-                    data = {
-                        'transaction_id': tx_id
-                    }
+                    return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+                tx_id =res['message'].split(':')[1].strip()
+                data = {
+                    'transaction_id': tx_id
+                }
             except Exception as e:
                 logger.error(e)
                 message = "Unknown error"
@@ -1040,10 +1042,9 @@ class RepositoryView(APIView):
                         'status': status.HTTP_400_BAD_REQUEST
                     }
                     return Response(data, status=status.HTTP_400_BAD_REQUEST)
-                else:
-                    data = {
-                        'asset': res
-                    }
+                data = {
+                    'asset': res
+                }
             except Exception as e:
                 logger.error(e)
                 message = "Unknown error"
@@ -1079,19 +1080,17 @@ class RepositoryView(APIView):
             try:
                 r = requests.post(url, headers=headers, data=json.dumps(payload))
                 res = r.json()
-                data = {
-                    'message': res['message']
-                }
                 if not res['success']:
-                    message = res['message']
                     data = {
-                        'error': message
+                        'error': True,
+                        'message': res['message'],
+                        'status': status.HTTP_400_BAD_REQUEST
                     }
-                else:
-                    tx_id = res['message'].split(':')[1].strip()
-                    data = {
-                        'transaction_id': tx_id
-                    }
+                    return Response(data, status=status.HTTP_400_BAD_REQUEST)
+                tx_id = res['message'].split(':')[1].strip()
+                data = {
+                    'transaction_id': tx_id
+                }
             except Exception as e:
                 logger.error(e)
                 message = "Unknown error"
@@ -1126,19 +1125,18 @@ class RepositoryView(APIView):
             try:
                 r = requests.post(url, headers=headers, data=json.dumps(payload))
                 res = r.json()
-                data = {
-                    'message': res['message']
-                }
+
                 if not res['success']:
-                    message = res['message']
                     data = {
-                        'error': message
+                        'error': True,
+                        'message': res['message'],
+                        'status': status.HTTP_400_BAD_REQUEST
                     }
-                else:
-                    tx_id = res['message'].split(':')[1].strip()
-                    data = {
-                        'transaction_id': tx_id
-                    }
+                    return Response(data, status=status.HTTP_400_BAD_REQUEST)
+                tx_id = res['message'].split(':')[1].strip()
+                data = {
+                    'transaction_id': tx_id
+                }
             except Exception as e:
                 logger.error(e)
                 message = "Unknown error"
@@ -1181,10 +1179,9 @@ class RepositoryView(APIView):
                         'status': status.HTTP_400_BAD_REQUEST
                     }
                     return Response(data, status=status.HTTP_400_BAD_REQUEST)
-                else:
-                    data = {
-                        'asset_list': res
-                    }
+                data = {
+                    'asset_list': res
+                }
             except Exception as e:
                 logger.error(e)
                 message = "Unknown error"
