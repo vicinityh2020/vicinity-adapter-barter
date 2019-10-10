@@ -12,7 +12,9 @@ from .thing_descriptors import *
 from .utils import *
 
 import itertools
-
+from ecdsa import SigningKey, SECP256k1
+from binascii import hexlify
+import random
 
 class ObjectsView(APIView):
     service_object_descriptor = {
@@ -141,8 +143,11 @@ class WalletActionsDash(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
+            # create private key
+            sk = SigningKey.generate(curve=SECP256k1)
+            private_key = hexlify(sk.to_string()).decode("utf-8")
             # call celery task for wallet setup
-            a = instantiate_dash_wallet.delay(token, network_type, wallet_secret, chainrider_token, 'NaN', oid, aid, rest_url)
+            a = instantiate_dash_wallet.delay(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid, rest_url)
         elif aid == 'wallet_recover':
             try:
                 network_type = input_data['network_type']
@@ -268,8 +273,11 @@ class WalletActionsBitcoin(APIView):
                 }
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
+            # create private key
+            sk = SigningKey.generate(curve=SECP256k1)
+            private_key = hexlify(sk.to_string()).decode("utf-8")
             # call celery task for wallet setup
-            a = instantiate_bitcoin_wallet.delay(token, network_type, wallet_secret, chainrider_token, 'NaN', oid, aid, rest_url)
+            a = instantiate_bitcoin_wallet.delay(token, network_type, wallet_secret, chainrider_token, private_key, oid, aid, rest_url)
         elif aid == 'wallet_recover':
             try:
                 network_type = input_data['network_type']
