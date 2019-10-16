@@ -35,6 +35,7 @@ BARTER adapter is publicly available to the Vicinity ecosystem. BARTER adapter e
 Dash micropayment service exposes the following:
 * Actions
   * wallet_setup - one time action, one can set up wallet for mainnet or testnet
+  * wallet_recover - one time action, one can recover a wallet with a private key
 * Properties
   * my_balance - provides info about wallet balance
   * my_funding_address - get info about wallet address in case you need to fund your wallet
@@ -52,6 +53,7 @@ Bitcoin micropayment service exposes the following:
 
 * Actions
   * wallet_setup - one time action, one can set up wallet for mainnet or testnet
+  * wallet_recover - one time action, one can recover a wallet with a private key
 * Properties
   * my_balance - provides info about wallet balance
   * my_funding_address - get info about wallet address in case you need to fund your wallet
