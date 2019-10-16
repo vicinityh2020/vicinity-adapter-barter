@@ -80,3 +80,12 @@ Repository service exposes the following:
 # Adapter usage
 
 A Vicinity user/device/service that wants to use services from the exposed BARTER adapter will communicate it's requests via the local agent to the remote agent (through the Vicinity ecosystem) running the BARTER adapter. APIs for using the BARTER adapter are documented in the provided [POSTMAN collection](https://drive.google.com/drive/folders/1m3syArnwDn0RYZ5FDFjLAi0XxL87loP7?usp=sharing). 
+
+# Validation 
+
+BARTER is validated in smart parking ecosystem. There are two smart parking reservation scenarios covered within smart parking. 
+
+The first one covers end user to platform/system parking reservation and payment. This scenario handles the situation when an end-user wants to reserve a smart parking spot at a smart garage, equipped with smart access automatic door unlocking. A working demonstration of this scenario can be viewed [here](https://www.youtube.com/watch?v=jrqIGyOWNDU). The web dashboard for parking space reservations can be accessed from [here](http://smartgarage.block-chain-labs.com:8000).
+
+The second scenario covers autonomous platform to platform (M2M) parking reservation and payments. In this case direct, automated platform-to-platform parking reservation and payments are covered, without involving human users. A working demonstration of this scenario can be viewed [here](https://www.youtube.com/watch?v=CD2j8u2hmUs). The web dashboard for parking space reservations can be accessed from [here](http://smarthotel.block-chain-labs.com:8000).
+
